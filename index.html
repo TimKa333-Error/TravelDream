@@ -1,3 +1,610 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:44013359dfcf7c90b5668d4cc929e0ada4bb38546dfaf8ebbce641b0b7e43749
-size 27828
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelDream - подбор туров по всему миру</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane"></i>
+                TravelDream
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Меню">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
+                <ul id="navMenu">
+                    <li><a href="index.html" class="active">Главная</a></li>
+                    <li><a href="destinations.html">Направления</a></li>
+                    <li><a href="tours.html">Туры</a></li>
+                    <li><a href="blog.html">Блог</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li id="authMenuItem">
+                        <div class="auth-buttons" id="authButtons"></div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <video autoplay muted loop class="hero-video">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-traveling-through-a-tropical-forest-4133-large.mp4" type="video/mp4">
+        </video>
+        
+        <div class="hero-content">
+            <h1>Откройте для себя мир с TravelDream</h1>
+            <p>Мы создаем незабываемые путешествия по всему миру. Находим лучшие предложения и делаем ваш отдых идеальным.</p>
+            <div class="hero-buttons">
+                <a href="tours.html" class="btn btn-accent">Найти тур</a>
+                <a href="#popular-tours" class="btn btn-outline">Популярные туры</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Преимущества -->
+    <section class="advantages">
+        <div class="container">
+            <h2 class="section-title">Почему выбирают нас</h2>
+            <p class="section-subtitle">TravelDream - это команда профессионалов, которая делает ваши путешествия особенными</p>
+            
+            <div class="advantages-grid">
+                <div class="advantage-card">
+                    <div class="advantage-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>15 лет опыта</h3>
+                    <p>Более 15 лет создаем идеальные путешествия для наших клиентов по всему миру</p>
+                </div>
+                
+                <div class="advantage-card">
+                    <div class="advantage-icon">
+                        <i class="fas fa-globe-europe"></i>
+                    </div>
+                    <h3>50+ стран</h3>
+                    <p>Широкий выбор направлений для любого вкуса и бюджета</p>
+                </div>
+                
+                <div class="advantage-card">
+                    <div class="advantage-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3>Индивидуальный подход</h3>
+                    <p>Подбираем тур именно под ваши пожелания, интересы и финансовые возможности</p>
+                </div>
+                
+                <div class="advantage-card">
+                    <div class="advantage-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Надежность</h3>
+                    <p>Гарантия лучшей цены, полная финансовая безопасность и поддержка 24/7</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Популярные направления -->
+    <section class="destinations">
+        <div class="container">
+            <h2 class="section-title">Популярные направления</h2>
+            <p class="section-subtitle">Откройте для себя лучшие места для путешествий в этом сезоне</p>
+            
+            <div class="destination-grid">
+                <div class="destination-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Турция">
+                    </div>
+                    <div class="card-content">
+                        <h3>Турция</h3>
+                        <p>Солнечные пляжи, богатая история и восточный колорит</p>
+                        <div class="price">от 450$</div>
+                        <a href="destinations.html?country=Turkey" class="btn btn-small">Смотреть направления</a>
+                    </div>
+                </div>
+                
+                <div class="destination-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Тайланд">
+                    </div>
+                    <div class="card-content">
+                        <h3>Тайланд</h3>
+                        <p>Экзотика, белоснежные пляжи и буддийские храмы</p>
+                        <div class="price">от 600$</div>
+                        <a href="destinations.html?country=Thailand" class="btn btn-small">Смотреть направления</a>
+                    </div>
+                </div>
+                
+                <div class="destination-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Италия">
+                    </div>
+                    <div class="card-content">
+                        <h3>Италия</h3>
+                        <p>Искусство, архитектура и средиземноморская кухня</p>
+                        <div class="price">от 700$</div>
+                        <a href="destinations.html?country=Italy" class="btn btn-small">Смотреть напрвления</a>
+                    </div>
+                </div>
+                
+                
+            </div>
+            
+            <div class="text-center">
+                <a href="destinations.html" class="btn">Все направления</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Видео-презентация -->
+    <section class="video-section">
+        <div class="container">
+            <h2 class="section-title">Путешествуйте с нами</h2>
+            <p>Посмотрите наше видео и вдохновитесь на следующее приключение</p>
+            
+            <div class="video-container">
+                <video id="player" playsinline controls>
+                    <source src="video/tive_destinations.mp4" type="video/mp4">
+                    Ваш браузер не поддерживает HTML5 видео.
+                </video>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Популярные туры -->
+    <section class="tours" id="popular-tours">
+        <div class="container">
+            <h2 class="section-title">Популярные туры</h2>
+            <p class="section-subtitle">Самые востребованные туры этого сезона по отзывам наших клиентов</p>
+            
+            <div class="tour-grid">
+                <div class="tour-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Турция">
+                    </div>
+                    <div class="tour-info">
+                        <h3>Анталия - все включено</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 10 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 4.8</span>
+                        </div>
+                        <p class="tour-description">Отдых в 5-звездочном отеле Lara Beach Resort & Spa с собственным пляжем, питание "все включено", экскурсии по историческим местам. Отель предлагает просторные номера с видом на море или сад, 3 бассейна (включая детский), анимационную программу и бесплатный Wi-Fi на всей территории.</p>
+                        <div class="tour-footer">
+                            <div class="price">650$</div>
+                            <a href="tours.html?tour=1" class="btn">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tour-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Тайланд">
+                    </div>
+                    <div class="tour-info">
+                        <h3>Пхукет - экзотический отдых</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 12 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 4.7</span>
+                        </div>
+                        <p class="tour-description">Комбинированный тур: пляжный отдых + экскурсии по островам. Проживание в отеле The Kee Resort & Spa 4* на пляже Ката. Включены 2 экскурсии (острова Пхи-Пхи и национальный парк Кхао Сок), завтраки "шведский стол", СПА-центр с тайским массажем и бесплатный трансфер из аэропорта. Рекомендуем посетить шоу Фантазия, храм Большого Будды и морскую прогулку на яхте.</p>
+                        <div class="tour-footer">
+                            <div class="price">720$</div>
+                            <a href="tours.html?tour=3" class="btn">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tour-card">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Италия">
+                    </div>
+                    <div class="tour-info">
+                        <h3>Рим - Венеция - Флоренция</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 8 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 4.9</span>
+                        </div>
+                        <p class="tour-description">Гастрономический тур по Италии с дегустациями вин и кулинарными мастер-классами. Проживание в отелях 3-4* в центре городов. Включены обзорные экскурсии по всем городам, 3 гастрономических мастер-класса, 5 дегустаций итальянских вин и ж/д билеты между городами. Посещение Колизея, Римского форума, собора Санта-Мария-дель-Фьоре, галереи Уффици, площади Сан-Марко и дворца дожей.</p>
+                        <div class="tour-footer">
+                            <div class="price">850$</div>
+                            <a href="tours.html?tour=2" class="btn">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <a href="tours.html" class="btn">Все туры</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Статистика -->
+    <section class="stats">
+        <div class="container">
+            <h2 class="section-title">TravelDream в цифрах</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Лет опыта</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Стран мира</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">15K+</div>
+                    <div class="stat-label">Довольных клиентов</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Отелей-партнеров</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Отзывы -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Отзывы наших клиентов</h2>
+            <p class="section-subtitle">Что говорят путешественники о своем опыте с TravelDream</p>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        Отдыхали в Турции через TravelDream - все было организовано на высшем уровне. Отель соответствовал описанию, трансферы без задержек. Особенно понравилась экскурсия в древний город Перге. Обязательно обратимся еще!
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-img">
+                            <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Марина">
+                        </div>
+                        <div class="author-info">
+                            <h4>Марина Иванова</h4>
+                            <p>Турция, июнь 2024</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        Спасибо за прекрасный отдых на Мальдивах! Менеджер подобрал идеальный отель для медового месяца. Все детали были учтены, даже сюрприз в номере от отеля. Отдельное спасибо за рекомендации по лучшим местам для снорклинга.
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-img">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Алексей">
+                        </div>
+                        <div class="author-info">
+                            <h4>Алексей и Анна Петровы</h4>
+                            <p>Мальдивы, май 2023</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        Путешествовали по Италии с туром от TravelDream. Гид был очень знающий, отели в центре городов, питание отличное. Особенно запомнился мастер-класс по приготовлению пасты в Риме. Узнали много интересного и попробовали настоящую итальянскую кухню.
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-img">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Ольга">
+                        </div>
+                        <div class="author-info">
+                            <h4>Ольга Смирнова</h4>
+                            <p>Италия, сентябрь 2025</p>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-plane"></i>
+                        TravelDream
+                    </div>
+                    <p class="footer-about">С 2010 года создаём незабываемые путешествия для наших клиентов. Более 15,000 довольных туристов по всему миру.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Социальные сети</h3>
+                    <ul class="footer-social-list">
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-whatsapp"></i></span>
+                                <span>WhatsApp</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-vk"></i></span>
+                                <span>ВКонтакте</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://t.me/TravelHelperTourBot" target="_blank">
+                                <span class="social-icon-circle"><i class="fab fa-telegram"></i></span>
+                                <span>Telegram (бот)</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Компания</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="blog.html">Блог</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Контакты</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Москва, ул. Туристическая, 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>+7 (495) 123-45-67</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@traveldream.ru</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Пн-Пт: 9:00-20:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 TravelDream. Все права защищены.</p>
+                </div>
+                
+                <div class="footer-legal">
+                    <a>Политика конфиденциальности</a>
+                    <a>Условия использования</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <style>
+        /* Футер */
+    .footer {
+        background-color: #264653;
+        color: white;
+        padding-top: 80px;
+        position: relative;
+        margin-top: 60px;
+    }
+    
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        padding-bottom: 40px;
+    }
+    
+    .footer-col {
+        margin-bottom: 30px;
+    }
+    
+    .footer-col h3 {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .footer-col h3::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 3px;
+        background-color: #2a9d8f;
+    }
+    
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: white;
+    }
+    
+    .footer-logo i {
+        margin-right: 10px;
+        color: #e9c46a;
+    }
+    
+    .footer-about {
+        margin-bottom: 25px;
+        line-height: 1.6;
+        opacity: 0.9;
+    }
+    
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+    
+    .footer-links a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .footer-links a:hover {
+        color: white;
+        transform: translateX(5px);
+    }
+    
+    .footer-social-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-social-list li {
+        margin-bottom: 15px;
+    }
+    
+    .footer-social-list a {
+        display: flex;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover {
+        color: #e9c46a;
+    }
+    
+    .social-icon-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover .social-icon-circle {
+        background-color: #2a9d8f;
+        transform: translateY(-3px);
+    }
+    
+    .footer-contact {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-contact li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .footer-contact i {
+        margin-right: 12px;
+        color: #2a9d8f;
+        font-size: 1.1rem;
+        margin-top: 3px;
+    }
+    
+    .footer-bottom {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: 25px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .footer-copyright {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+    }
+    
+    .footer-legal {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .footer-legal a {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+        transition: color 0.3s;
+        text-decoration: none;
+    }
+    
+    .footer-legal a:hover {
+        color: white;
+    }
+    
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .footer-bottom {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .footer-legal {
+            justify-content: center;
+        }
+    }   
+    </style>
+    
+    <script src="js/index(main).js"></script>
+</body>
+</html>

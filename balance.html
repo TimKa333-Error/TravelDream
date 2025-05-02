@@ -1,3 +1,462 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:ffb968656d8cfb62f3be9454497d7fe74d7b756f1c8c4400c0927180cf8121e1
-size 17758
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Баланс - TravelDream</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/balance.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane"></i>
+                TravelDream
+            </a>
+            
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="destinations.html">Направления</a></li>
+                    <li><a href="tours.html">Туры</a></li>
+                    <li><a href="blog.html">Блог</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="profile.html">Профиль</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Основной контент -->
+    <main class="balance-page">
+        <div class="container">
+            <div class="profile-header">
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> На главную
+                </a>
+            </div>
+            
+            <div class="profile-grid">
+                <div class="profile-sidebar">
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Аватар" id="profileAvatar">
+                        </div>
+                        <h3 id="profileName"></h3>
+                        <p class="profile-email" id="profileEmail"></p>
+                        
+                        <div class="profile-menu">
+                            <a href="profile.html">
+                                <i class="fas fa-user"></i> Личные данные
+                            </a>
+                            <a href="profile-bookings.html">
+                                <i class="fas fa-suitcase"></i> Мои бронирования
+                            </a>
+                            <a href="balance.html" class="active">
+                                <i class="fas fa-wallet"></i> Баланс
+                            </a>
+                            <a href="profile-settings.html">
+                                <i class="fas fa-cog"></i> Настройки
+                            </a>
+                            <a href="index.html">
+                                <i class="fas fa-sign-out-alt"></i> Выйти
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-content">
+                    <div class="balance-summary">
+                        <div class="balance-card">
+                            <h3>Текущий баланс</h3>
+                            <div class="balance-amount" id="currentBalance">$0</div>
+                            <div class="balance-actions">
+                                <button class="btn btn-accent" id="addFundsBtn">
+                                    <i class="fas fa-plus"></i> Пополнить
+                                </button>
+                                <button class="btn btn-outline" id="showHistoryBtn">
+                                    <i class="fas fa-history"></i> История операций
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="transactions-history" id="transactionsHistory">
+                        <div class="transactions-header">
+                            <h2>История операций</h2>
+                            <button class="btn btn-outline btn-clear-history" id="clearHistoryBtn">
+                                <i class="fas fa-trash-alt"></i> Очистить историю
+                            </button>
+                        </div>
+                        <div class="transactions-list" id="transactionsList"></div>
+                    </div>
+                    
+                    <div class="payment-methods">
+                        <h2>Способы оплаты</h2>
+                        <div class="methods-list" id="methodsList">
+                            <!-- Список карт будет здесь -->
+                        </div>
+                    </div>
+                    <div class="add-funds-modal" id="addFundsModal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>Пополнение баланса</h3>
+                                <button class="btn-close-modal" id="closeAddFundsModal">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addFundsForm">
+                                    <div class="form-group">
+                                        <label for="amount">Сумма ($)</label>
+                                        <input type="number" id="amount" min="10" step="10" value="100" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Способ оплаты</label>
+                                        <div class="payment-options" id="paymentOptions">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-block btn-accent">Пополнить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Модальное окно подтверждения удаления карты -->
+                    <div class="confirm-modal" id="confirmModal">
+                        <div class="confirm-content">
+                            <h3 id="confirmTitle">Удалить карту?</h3>
+                            <p id="confirmMessage">Вы уверены, что хотите удалить эту карту? Это действие нельзя отменить.</p>
+                            <div class="confirm-buttons">
+                                <button class="btn btn-outline" id="cancelDeleteBtn">Отмена</button>
+                                <button class="btn btn-accent" id="confirmDeleteBtn">Удалить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Модальное окно добавления карты -->
+        <div class="add-card-modal" id="addCardModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Добавить карту</h3>
+                    <button class="btn-close-modal" id="closeAddCardModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCardForm">
+                        <div class="form-group">
+                            <label for="cardNumber">Номер карты</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                            <div class="card-icons">
+                                <i class="fab fa-cc-visa"></i>
+                                <i class="fab fa-cc-mastercard"></i>
+                                <i class="fab fa-cc-mir"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cardExpiry">Срок действия</label>
+                                <input type="text" id="cardExpiry" placeholder="MM/ГГ" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cardCvc">CVC/CVV</label>
+                                <input type="text" id="cardCvc" placeholder="123" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cardName">Имя владельца</label>
+                            <input type="text" id="cardName" placeholder="IVAN PETROV" required>
+                        </div>
+                        
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="makeDefault" checked>
+                            <label for="makeDefault">Сделать основным способом оплаты</label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-block btn-accent">Добавить карту</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-plane"></i>
+                        TravelDream
+                    </div>
+                    <p class="footer-about">С 2010 года создаём незабываемые путешествия для наших клиентов. Более 15,000 довольных туристов по всему миру.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Социальные сети</h3>
+                    <ul class="footer-social-list">
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-whatsapp"></i></span>
+                                <span>WhatsApp</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-vk"></i></span>
+                                <span>ВКонтакте</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://t.me/TravelHelperTourBot" target="_blank">
+                                <span class="social-icon-circle"><i class="fab fa-telegram"></i></span>
+                                <span>Telegram (бот)</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Компания</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="blog.html">Блог</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Контакты</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Москва, ул. Туристическая, 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>+7 (495) 123-45-67</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@traveldream.ru</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Пн-Пт: 9:00-20:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 TravelDream. Все права защищены.</p>
+                </div>
+                
+                <div class="footer-legal">
+                    <a>Политика конфиденциальности</a>
+                    <a>Условия использования</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <style>
+        /* Футер */
+    .footer {
+        background-color: #264653;
+        color: white;
+        padding-top: 80px;
+        position: relative;
+        margin-top: 60px;
+    }
+    
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        padding-bottom: 40px;
+    }
+    
+    .footer-col {
+        margin-bottom: 30px;
+    }
+    
+    .footer-col h3 {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .footer-col h3::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 3px;
+        background-color: #2a9d8f;
+    }
+    
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: white;
+    }
+    
+    .footer-logo i {
+        margin-right: 10px;
+        color: #e9c46a;
+    }
+    
+    .footer-about {
+        margin-bottom: 25px;
+        line-height: 1.6;
+        opacity: 0.9;
+    }
+    
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+    
+    .footer-links a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .footer-links a:hover {
+        color: white;
+        transform: translateX(5px);
+    }
+    
+    .footer-social-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-social-list li {
+        margin-bottom: 15px;
+    }
+    
+    .footer-social-list a {
+        display: flex;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover {
+        color: #e9c46a;
+    }
+    
+    .social-icon-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover .social-icon-circle {
+        background-color: #2a9d8f;
+        transform: translateY(-3px);
+    }
+    
+    .footer-contact {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-contact li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .footer-contact i {
+        margin-right: 12px;
+        color: #2a9d8f;
+        font-size: 1.1rem;
+        margin-top: 3px;
+    }
+    
+    .footer-bottom {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: 25px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .footer-copyright {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+    }
+    
+    .footer-legal {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .footer-legal a {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+        transition: color 0.3s;
+        text-decoration: none;
+    }
+    
+    .footer-legal a:hover {
+        color: white;
+    }
+    
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .footer-bottom {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .footer-legal {
+            justify-content: center;
+        }
+    }   
+    </style>
+
+    <script src="js/balance.js"></script>
+</body>
+</html>

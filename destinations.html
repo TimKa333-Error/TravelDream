@@ -1,3 +1,420 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:ee8c8ffa4b9156b61d0868c5d705a6be11b8c4030a83d588f8ad8f872fac7621
-size 14349
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Направления - TravelDream</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/destinations.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane"></i>
+                TravelDream
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="destinations.html" class="active">Направления</a></li>
+                    <li><a href="tours.html">Туры</a></li>
+                    <li><a href="blog.html">Блог</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li id="authMenuItem">
+                        <div class="auth-buttons" id="authButtons">
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Основной контент -->
+    <main class="destinations-page">
+        <div class="container">
+            <div class="page-header">
+                <h1>Все направления</h1>
+                <p>Выберите страну для вашего следующего путешествия</p>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="continent">Континент</label>
+                    <select id="continent">
+                        <option value="">Все континенты</option>
+                        <option value="europe">Европа</option>
+                        <option value="asia">Азия</option>
+                        <option value="america">Америка</option>
+                        <option value="africa">Африка</option>
+                        <option value="oceania">Океания</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="season">Сезон</label>
+                    <select id="season">
+                        <option value="">Любой сезон</option>
+                        <option value="summer">Лето</option>
+                        <option value="winter">Зима</option>
+                        <option value="spring">Весна</option>
+                        <option value="autumn">Осень</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="type">Тип отдыха</label>
+                    <select id="type">
+                        <option value="">Любой тип</option>
+                        <option value="beach">Пляжный</option>
+                        <option value="excursion">Экскурсионный</option>
+                        <option value="ski">Горнолыжный</option>
+                        <option value="cruise">Круизы</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-outline" id="filterBtn">
+                    <i class="fas fa-filter"></i> Фильтровать
+                </button>
+            </div>
+            
+            <div class="destinations-grid" id="destinationsContainer">
+            </div>
+            
+            <div class="pagination">
+                <a href="#" class="page-link prev" id="prevPage">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <a href="#" class="page-link active" data-page="1">1</a>
+                <a href="#" class="page-link" data-page="2">2</a>
+                <a href="#" class="page-link" data-page="3">3</a>
+                <a href="#" class="page-link next" id="nextPage">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Модальное окно бронирования -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Бронирование тура в <span id="modalCountry"></span></h2>
+            <p class="modal-price">Стоимость: <span id="modalPrice"></span>$</p>
+            
+            <form id="bookingForm" class="booking-form">
+                <div class="form-group">
+                    <label for="name">Ваше имя</label>
+                    <input type="text" id="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Телефон</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date">Дата тура</label>
+                    <input type="date" id="date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="people">Количество человек</label>
+                    <select id="people" required>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5+">5+</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    Подтвердить бронирование
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-plane"></i>
+                        TravelDream
+                    </div>
+                    <p class="footer-about">С 2010 года создаём незабываемые путешествия для наших клиентов. Более 15,000 довольных туристов по всему миру.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Социальные сети</h3>
+                    <ul class="footer-social-list">
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-whatsapp"></i></span>
+                                <span>WhatsApp</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-vk"></i></span>
+                                <span>ВКонтакте</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://t.me/TravelHelperTourBot" target="_blank">
+                                <span class="social-icon-circle"><i class="fab fa-telegram"></i></span>
+                                <span>Telegram (бот)</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Компания</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="blog.html">Блог</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Контакты</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Москва, ул. Туристическая, 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>+7 (495) 123-45-67</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@traveldream.ru</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Пн-Пт: 9:00-20:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 TravelDream. Все права защищены.</p>
+                </div>
+                
+                <div class="footer-legal">
+                    <a>Политика конфиденциальности</a>
+                    <a>Условия использования</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <style>
+        /* Футер */
+    .footer {
+        background-color: #264653;
+        color: white;
+        padding-top: 80px;
+        position: relative;
+        margin-top: 60px;
+    }
+    
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        padding-bottom: 40px;
+    }
+    
+    .footer-col {
+        margin-bottom: 30px;
+    }
+    
+    .footer-col h3 {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .footer-col h3::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 3px;
+        background-color: #2a9d8f;
+    }
+    
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: white;
+    }
+    
+    .footer-logo i {
+        margin-right: 10px;
+        color: #e9c46a;
+    }
+    
+    .footer-about {
+        margin-bottom: 25px;
+        line-height: 1.6;
+        opacity: 0.9;
+    }
+    
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+    
+    .footer-links a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .footer-links a:hover {
+        color: white;
+        transform: translateX(5px);
+    }
+    
+    .footer-social-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-social-list li {
+        margin-bottom: 15px;
+    }
+    
+    .footer-social-list a {
+        display: flex;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover {
+        color: #e9c46a;
+    }
+    
+    .social-icon-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover .social-icon-circle {
+        background-color: #2a9d8f;
+        transform: translateY(-3px);
+    }
+    
+    .footer-contact {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-contact li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .footer-contact i {
+        margin-right: 12px;
+        color: #2a9d8f;
+        font-size: 1.1rem;
+        margin-top: 3px;
+    }
+    
+    .footer-bottom {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: 25px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .footer-copyright {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+    }
+    
+    .footer-legal {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .footer-legal a {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+        transition: color 0.3s;
+        text-decoration: none;
+    }
+    
+    .footer-legal a:hover {
+        color: white;
+    }
+    
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .footer-bottom {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .footer-legal {
+            justify-content: center;
+        }
+    }   
+    </style>
+    <script src="js/destinations.js"></script>
+</body>
+</html>

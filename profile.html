@@ -1,3 +1,480 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e5b74b383ed051b8f0179db4df26b5e61d74a897d2bef236e86f9b0af82c1b6a
-size 19708
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - TravelDream</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane"></i>
+                TravelDream
+            </a>
+            
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="destinations.html">Направления</a></li>
+                    <li><a href="tours.html">Туры</a></li>
+                    <li><a href="blog.html">Блог</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="profile.html" class="active">Профиль</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="profile-page">
+        <div class="container">
+            <div class="profile-header">
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> На главную
+                </a>
+            </div>
+            
+            <div class="profile-grid">  
+                <div class="profile-sidebar">
+                    <div class="profile-card">
+                        <div class="profile-avatar-container">
+                            <div class="profile-avatar">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Аватар" id="profileAvatar">
+                            </div>
+                            <button class="btn-edit-avatar" id="editAvatarBtn">
+                                <i class="fas fa-camera"></i>
+                                <span>Сменить фото</span>
+                            </button>
+                        </div>
+                        
+                        <h3 id="profileName"></h3>
+                        <p class="profile-email" id="profileEmail"></p>
+                        
+                        <div class="profile-menu">
+                            <a href="profile.html" class="active">
+                                <i class="fas fa-user"></i> Личные данные
+                            </a>
+                            <a href="profile-bookings.html">
+                                <i class="fas fa-suitcase"></i> Мои бронирования
+                            </a>
+                            <a href="balance.html">
+                                <i class="fas fa-wallet"></i> Баланс
+                            </a>
+                            <a href="profile-settings.html">
+                                <i class="fas fa-cog"></i> Настройки
+                            </a>
+                            <a href="login.html">
+                                <i class="fas fa-sign-out-alt"></i> Выйти
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-content">
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <div class="section-title-wrapper">
+                                <button class="btn btn-small" id="editProfileBtn">Редактировать</button>
+                            </div>
+                        </div>
+                        
+                        <form class="profile-form" id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">Имя</label>
+                                    <input type="text" id="firstName" value="" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Фамилия</label>
+                                    <input type="text" id="lastName" value="" disabled>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" value="" disabled>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Телефон</label>
+                                <input type="tel" id="phone" value="" disabled>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="birthday">Дата рождения</label>
+                                <input type="date" id="birthday" value="" disabled>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="country">Страна</label>
+                                <input type="text" id="country" value="" disabled>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="city">Город</label>
+                                <input type="text" id="city" value="" disabled>
+                            </div>
+                            
+                            <div class="form-actions" id="formActions" style="display: none;">
+                                <button type="button" class="btn btn-outline" id="cancelEditBtn">Отмена</button>
+                                <button type="submit" class="btn">Сохранить изменения</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Модальное окно смены аватара -->
+    <div class="modal" id="avatarModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Смена аватара</h3>
+                <button class="btn-close-modal" id="closeAvatarModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="avatar-tabs">
+                    <button class="tab-btn active" data-tab="upload">Загрузить фото</button>
+                    <button class="tab-btn" data-tab="gallery">Галерея</button>
+                </div>
+                
+                <div class="tab-content active" id="uploadTab">
+                    <div class="upload-container">
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Перетащите сюда фото или нажмите для выбора</p>
+                            <input type="file" id="avatarFile" accept="image/*">
+                        </div>
+                        <div class="upload-preview">
+                            <div class="preview-container">
+                                <p>Предпросмотр:</p>
+                                <div class="preview-image">
+                                    <img id="previewImg" src="" alt="Превью">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="galleryTab">
+                    <div class="avatar-gallery">
+                        <h4>Выберите аватар из коллекции</h4>
+                        <div class="gender-filter">
+                            <button class="gender-btn active" data-gender="all">Все</button>
+                            <button class="gender-btn" data-gender="male">Мужские</button>
+                            <button class="gender-btn" data-gender="female">Женские</button>
+                        </div>
+                        <div class="default-avatars">
+                            <!-- Мужские аватары -->
+                            <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Аватар 1" data-gender="male">
+                            <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="Аватар 2" data-gender="male">
+                            <img src="https://randomuser.me/api/portraits/men/3.jpg" alt="Аватар 3" data-gender="male">
+                            <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="Аватар 4" data-gender="male">
+                            <img src="https://randomuser.me/api/portraits/men/5.jpg" alt="Аватар 5" data-gender="male">
+                            <img src="https://randomuser.me/api/portraits/men/6.jpg" alt="Аватар 6" data-gender="male">
+                            <img src="https://randomuser.me/api/portraits/men/7.jpg" alt="Аватар 7" data-gender="male">
+                            <img src="https://randomuser.me/api/portraits/men/8.jpg" alt="Аватар 8" data-gender="male">
+                            <img src="https://randomuser.me/api/portraits/men/9.jpg" alt="Аватар 9" data-gender="male">
+                            <img src="https://randomuser.me/api/portraits/men/10.jpg" alt="Аватар 10" data-gender="male">
+                            <!-- Женские аватары -->
+                            <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Аватар 11" data-gender="female">
+                            <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="Аватар 12" data-gender="female">
+                            <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="Аватар 13" data-gender="female">
+                            <img src="https://randomuser.me/api/portraits/women/4.jpg" alt="Аватар 14" data-gender="female">
+                            <img src="https://randomuser.me/api/portraits/women/5.jpg" alt="Аватар 15" data-gender="female">
+                            <img src="https://randomuser.me/api/portraits/women/6.jpg" alt="Аватар 16" data-gender="female">
+                            <img src="https://randomuser.me/api/portraits/women/7.jpg" alt="Аватар 17" data-gender="female">
+                            <img src="https://randomuser.me/api/portraits/women/8.jpg" alt="Аватар 18" data-gender="female">
+                            <img src="https://randomuser.me/api/portraits/women/9.jpg" alt="Аватар 19" data-gender="female">
+                            <img src="https://randomuser.me/api/portraits/women/10.jpg" alt="Аватар 20" data-gender="female">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelAvatarBtn">Отмена</button>
+                <button class="btn" id="saveAvatarBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-plane"></i>
+                        TravelDream
+                    </div>
+                    <p class="footer-about">С 2010 года создаём незабываемые путешествия для наших клиентов. Более 15,000 довольных туристов по всему миру.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Социальные сети</h3>
+                    <ul class="footer-social-list">
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-whatsapp"></i></span>
+                                <span>WhatsApp</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-vk"></i></span>
+                                <span>ВКонтакте</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://t.me/TravelHelperTourBot" target="_blank">
+                                <span class="social-icon-circle"><i class="fab fa-telegram"></i></span>
+                                <span>Telegram (бот)</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Компания</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="blog.html">Блог</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Контакты</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Москва, ул. Туристическая, 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>+7 (495) 123-45-67</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@traveldream.ru</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Пн-Пт: 9:00-20:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 TravelDream. Все права защищены.</p>
+                </div>
+                
+                <div class="footer-legal">
+                    <a>Политика конфиденциальности</a>
+                    <a>Условия использования</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <style>
+        /* Футер */
+    .footer {
+        background-color: #264653;
+        color: white;
+        padding-top: 80px;
+        position: relative;
+        margin-top: 60px;
+    }
+    
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        padding-bottom: 40px;
+    }
+    
+    .footer-col {
+        margin-bottom: 30px;
+    }
+    
+    .footer-col h3 {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .footer-col h3::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 3px;
+        background-color: #2a9d8f;
+    }
+    
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: white;
+    }
+    
+    .footer-logo i {
+        margin-right: 10px;
+        color: #e9c46a;
+    }
+    
+    .footer-about {
+        margin-bottom: 25px;
+        line-height: 1.6;
+        opacity: 0.9;
+    }
+    
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+    
+    .footer-links a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .footer-links a:hover {
+        color: white;
+        transform: translateX(5px);
+    }
+    
+    .footer-social-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-social-list li {
+        margin-bottom: 15px;
+    }
+    
+    .footer-social-list a {
+        display: flex;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover {
+        color: #e9c46a;
+    }
+    
+    .social-icon-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover .social-icon-circle {
+        background-color: #2a9d8f;
+        transform: translateY(-3px);
+    }
+    
+    .footer-contact {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-contact li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .footer-contact i {
+        margin-right: 12px;
+        color: #2a9d8f;
+        font-size: 1.1rem;
+        margin-top: 3px;
+    }
+    
+    .footer-bottom {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: 25px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .footer-copyright {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+    }
+    
+    .footer-legal {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .footer-legal a {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+        transition: color 0.3s;
+        text-decoration: none;
+    }
+    
+    .footer-legal a:hover {
+        color: white;
+    }
+    
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .footer-bottom {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .footer-legal {
+            justify-content: center;
+        }
+    }   
+    </style>
+
+    <script src="js/script.js"></script>
+    <script src="js/profile.js"></script>
+    
+</body>
+</html>

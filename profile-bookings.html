@@ -1,3 +1,408 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:23d9b3d5534d94b93fbb131b607ab4bce19014100f425c2cfd6f66a577f7836c
-size 14214
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои бронирования - TravelDream</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/profile-bookings.css">
+
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane"></i>
+                TravelDream
+            </a>
+            
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="destinations.html">Направления</a></li>
+                    <li><a href="tours.html">Туры</a></li>
+                    <li><a href="blog.html">Блог</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li><a href="profile.html">Профиль</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="profile-page">
+        <div class="container">
+            <div class="profile-header">
+                <a href="index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> На главную
+                </a>
+            </div>
+            
+            <div class="profile-grid">  
+                <div class="profile-sidebar">
+                    <div class="profile-card">
+                        <div class="profile-avatar-container">
+                            <div class="profile-avatar">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Аватар" id="profileAvatar">
+                            </div>
+                        </div>
+                        
+                        <h3 id="profileName"></h3>
+                        <p class="profile-email" id="profileEmail"></p>
+                        
+                        <div class="profile-menu">
+                            <a href="profile.html">
+                                <i class="fas fa-user"></i> Личные данные
+                            </a>
+                            <a href="profile-bookings.html" class="active">
+                                <i class="fas fa-suitcase"></i> Мои бронирования
+                            </a>
+                            <a href="balance.html">
+                                <i class="fas fa-wallet"></i> Баланс
+                            </a>
+                            <a href="profile-settings.html">
+                                <i class="fas fa-cog"></i> Настройки
+                            </a>
+                            <a href="login.html">
+                                <i class="fas fa-sign-out-alt"></i> Выйти
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-content">
+                    <div class="bookings-title-wrapper">
+                    </div>
+                    <div class="bookings-container">
+                        <div class="bookings-tabs">
+                            <button class="tab-btn active" data-tab="current">Текущие</button>
+                            <button class="tab-btn" data-tab="completed">Оплаченные</button>
+                            <button class="tab-btn" data-tab="cancelled">Отмененные</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="current">
+                            <!-- Текущие бронирования будут загружены динамически -->
+                        </div>
+                        
+                        <div class="tab-content" id="completed">
+                            <!-- Оплаченные бронирования будут загружены динамически -->
+                        </div>
+                        
+                        <div class="tab-content" id="cancelled">
+                            <!-- Отмененные бронирования будут загружены динамически -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="bookingDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Детали бронирования</h3>
+                <button class="btn-close-modal" id="closeBookingModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="bookingDetailsContent">
+                <!-- Содержимое будет заполнено динамически -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelBookingDetails">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="confirmCancelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Отмена бронирования</h3>
+                <button class="btn-close-modal" id="closeConfirmCancelModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Вы уверены, что хотите отменить это бронирование?</p>
+                <p class="text-muted">Отменить бронирование можно не позднее чем за 7 дней до начала тура.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelCancelBooking">Нет, оставить</button>
+                <button class="btn btn-danger" id="confirmCancelBooking">Да, отменить</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-plane"></i>
+                        TravelDream
+                    </div>
+                    <p class="footer-about">С 2010 года создаём незабываемые путешествия для наших клиентов. Более 15,000 довольных туристов по всему миру.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Социальные сети</h3>
+                    <ul class="footer-social-list">
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-whatsapp"></i></span>
+                                <span>WhatsApp</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-vk"></i></span>
+                                <span>ВКонтакте</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://t.me/TravelHelperTourBot" target="_blank">
+                                <span class="social-icon-circle"><i class="fab fa-telegram"></i></span>
+                                <span>Telegram (бот)</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Компания</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="blog.html">Блог</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Контакты</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Москва, ул. Туристическая, 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>+7 (495) 123-45-67</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@traveldream.ru</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Пн-Пт: 9:00-20:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 TravelDream. Все права защищены.</p>
+                </div>
+                
+                <div class="footer-legal">
+                    <a>Политика конфиденциальности</a>
+                    <a>Условия использования</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <style>
+        /* Футер */
+    .footer {
+        background-color: #264653;
+        color: white;
+        padding-top: 80px;
+        position: relative;
+        margin-top: 60px;
+    }
+    
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        padding-bottom: 40px;
+    }
+    
+    .footer-col {
+        margin-bottom: 30px;
+    }
+    
+    .footer-col h3 {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .footer-col h3::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 3px;
+        background-color: #2a9d8f;
+    }
+    
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: white;
+    }
+    
+    .footer-logo i {
+        margin-right: 10px;
+        color: #e9c46a;
+    }
+    
+    .footer-about {
+        margin-bottom: 25px;
+        line-height: 1.6;
+        opacity: 0.9;
+    }
+    
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+    
+    .footer-links a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .footer-links a:hover {
+        color: white;
+        transform: translateX(5px);
+    }
+    
+    .footer-social-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-social-list li {
+        margin-bottom: 15px;
+    }
+    
+    .footer-social-list a {
+        display: flex;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover {
+        color: #e9c46a;
+    }
+    
+    .social-icon-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover .social-icon-circle {
+        background-color: #2a9d8f;
+        transform: translateY(-3px);
+    }
+    
+    .footer-contact {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-contact li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .footer-contact i {
+        margin-right: 12px;
+        color: #2a9d8f;
+        font-size: 1.1rem;
+        margin-top: 3px;
+    }
+    
+    .footer-bottom {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: 25px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .footer-copyright {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+    }
+    
+    .footer-legal {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .footer-legal a {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+        transition: color 0.3s;
+        text-decoration: none;
+    }
+    
+    .footer-legal a:hover {
+        color: white;
+    }
+    
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .footer-bottom {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .footer-legal {
+            justify-content: center;
+        }
+    }   
+    </style>
+            
+    <script src="js/profile-bookings.js"></script> 
+</body>
+</html>

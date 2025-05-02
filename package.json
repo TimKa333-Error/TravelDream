@@ -1,3 +1,8 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c5a6b665c3d389cacb40463f3c839f2ba01b65f4ae8f1faf1da2d4dcfa0bb51b
-size 140
+{
+  "dependencies": {
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "node-telegram-bot-api": "^0.63.0"
+  }
+}

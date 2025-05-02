@@ -1,3 +1,18 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:940ddbc8265e09193b150a4828843dd1e5d50d070ef2ebe0041d90bdaab20a29
-size 356
+{
+  "name": "tg_bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "dotenv": "^16.5.0",
+    "figlet": "^1.8.1",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}

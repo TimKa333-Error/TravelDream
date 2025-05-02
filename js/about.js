@@ -1,3 +1,54 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:38900ae0b14ba9c1ae1d0e9d6b8794f25452290cedfee267845d2bff9ae01a43
-size 2269
+// Проверяем статус авторизации
+document.addEventListener('DOMContentLoaded', function() {
+    // Мобильное меню
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navMenu = document.getElementById('navMenu');
+    
+    mobileMenuBtn.addEventListener('click', function() {
+        navMenu.classList.toggle('show');
+    });
+    
+    // Авторизация
+    const authButtons = document.getElementById('authButtons');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const username = localStorage.getItem('username') || 'Профиль';
+    
+    if (isLoggedIn) {
+        // Если пользователь вошел, показываем кнопку профиля
+        authButtons.innerHTML = `
+            <a href="profile.html" class="btn-profile">
+                <i class="fas fa-user"></i>
+                ${username}
+            </a>
+            <button class="btn-logout" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Выход
+            </button>
+        `;
+        
+        // Обработчик выхода
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
+            window.location.href = 'index.html';
+        });
+    } else {
+        // Если не вошел, показываем кнопки входа и регистрации
+        authButtons.innerHTML = `
+            <button class="btn-login" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> Вход
+            </button>
+            <button class="btn-register" id="registerBtn">
+                <i class="fas fa-user-plus"></i> Регистрация
+            </button>
+        `;
+        
+        // Обработчики кнопок
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            window.location.href = 'login.html';
+        });
+        
+        document.getElementById('registerBtn').addEventListener('click', function() {
+            window.location.href = 'register.html';
+        });
+    }
+});

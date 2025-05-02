@@ -1,3 +1,879 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:5252052785e5bfd3e3b700454a2060106f300cac8d79fed76bff3e90a2e80c89
-size 17115
+/* Стили для страницы профиля */
+.profile-page {
+    padding: 40px 0;
+}
+
+.back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.back-link:hover {
+    color: var(--primary-dark);
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+}
+
+.profile-sidebar {
+    position: sticky;
+    top: 100px;
+    align-self: start;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.profile-avatar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--light);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.btn-edit-avatar {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-edit-avatar:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.profile-card h3 {
+    text-align: center;
+    margin-bottom: 5px;
+    color: var(--secondary);
+}
+
+.profile-email {
+    text-align: center;
+    color: var(--gray);
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+}
+
+.profile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    border-radius: 5px;
+    color: var(--dark);
+    transition: all 0.3s ease;
+}
+
+.profile-menu a:hover {
+    background-color: var(--light-gray);
+    color: var(--primary);
+}
+
+.profile-menu a.active {
+    background-color: rgba(42, 157, 143, 0.1);
+    color: var(--primary);
+}
+
+.profile-menu a i {
+    width: 20px;
+    text-align: center;
+}
+
+.profile-content {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.section-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.section-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.section-header h2 {
+    margin: 0;
+    color: var(--secondary);
+}
+
+.profile-form .form-row {
+    margin-bottom: 20px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--light-gray);
+}
+
+/* Стили для модального окна аватара */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--secondary);
+}
+
+.btn-close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--gray);
+    transition: all 0.3s ease;
+}
+
+.btn-close-modal:hover {
+    color: var(--dark);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding: 20px;
+    border-top: 1px solid var(--light-gray);
+}
+
+.avatar-tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: #666;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    color: var(--primary);
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.upload-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.upload-area {
+    flex: 1;
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-area:hover {
+    border-color: var(--primary);
+    background-color: rgba(42, 157, 143, 0.05);
+}
+
+.upload-area i {
+    font-size: 2.5rem;
+    color: var(--gray);
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover i {
+    color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.upload-area p {
+    color: var(--gray);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.upload-area #avatarFile {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-preview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-container {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-container p {
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--secondary);
+}
+
+.preview-image {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.preview-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.avatar-gallery {
+    margin-top: 20px;
+}
+
+.avatar-gallery h4 {
+    margin-bottom: 15px;
+    color: var(--secondary);
+}
+
+.gender-filter {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.gender-btn {
+    padding: 5px 15px;
+    background: #f1f1f1;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gender-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+.default-avatars {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 10px;
+}
+
+.default-avatars img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    object-fit: cover;
+    border: 2px solid transparent;
+    background: white;
+}
+
+.default-avatars img:hover {
+    transform: scale(1.05);
+    border-color: var(--primary);
+}
+
+.default-avatars img.selected {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.3);
+}
+
+
+
+/* Стили для активного состояния полей формы */
+input:disabled {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+    color: #495057;
+}
+
+input:not(:disabled) {
+    background-color: white;
+    border-color: #ced4da;
+}
+
+/* Адаптивные стили */
+@media (max-width: 992px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-sidebar {
+        position: static;
+    }
+    
+    .upload-container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .modal-content {
+        max-width: 95%;
+    }   
+}
+
+/* Медиа-запросы для адаптации под мобильные устройства */
+
+@media (max-width: 992px) {
+    /* Планшеты и небольшие ноутбуки */
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero p {
+        font-size: 1.1rem;
+    }
+    
+    .search-form {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .destination-grid,
+    .tour-grid,
+    .testimonial-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .video-container {
+        width: 90%;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    /* Планшеты и крупные смартфоны */
+    .header-container {
+        flex-wrap: wrap;
+    }
+    
+    nav ul {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background-color: white;
+        flex-direction: column;
+        padding: 20px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+    
+    nav ul.show {
+        display: flex;
+    }
+    
+    nav ul li {
+        margin: 10px 0;
+        width: 100%;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+    
+    .search-form {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-box {
+        transform: translateY(20px);
+    }
+    
+    .newsletter-form,
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .newsletter-form input,
+    .hero-buttons a {
+        border-radius: 5px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    
+    .newsletter-form button,
+    .hero-buttons a {
+        border-radius: 5px;
+        width: 100%;
+    }
+    
+    /* Адаптивные стили для меню профиля */
+    .nav-profile {
+        width: 100%;
+    }
+    
+    .profile-dropdown {
+        position: static;
+        box-shadow: none;
+        width: 100%;
+    }
+    
+    .profile-link {
+        justify-content: center;
+        padding: 10px 0;
+    }
+    
+    .auth-buttons {
+        margin-left: 0;
+        margin-top: 10px;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-login, 
+    .btn-register,
+    .btn-profile,
+    .btn-logout {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    
+    /* Герой секция */
+    .hero {
+        height: 90vh;
+        min-height: 500px;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+    
+    /* Карточки */
+    .destination-card,
+    .tour-card {
+        margin-bottom: 20px;
+    }
+    
+    /* Формы */
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    /* Видео секция */
+    .video-container {
+        width: 100%;
+    }
+    
+    /* Статистика */
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Футер */
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Смартфоны */
+    .hero {
+        height: 80vh;
+        min-height: 400px;
+    }
+    
+    .hero h1 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .mobile-menu-btn {
+        font-size: 1.3rem;
+    }
+    
+    /* Карточки направлений */
+    .destination-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Карточки туров */
+    .tour-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tour-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    /* Отзывы */
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .testimonial-author {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .author-img {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    
+    /* Преимущества */
+    .advantages-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Видео плеер */
+    .plyr--video {
+        border-radius: 0;
+    }
+    
+    /* Модальные окна */
+    .modal-content {
+        width: 95%;
+        margin: 10px auto;
+    }
+}
+
+/* Дополнительные адаптивные стили для очень маленьких экранов */
+@media (max-width: 400px) {
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+    
+    .btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px 12px;
+    }
+    
+    .card-img {
+        height: 180px;
+    }
+    
+    .testimonial-text::before {
+        font-size: 2rem;
+        top: -10px;
+    }
+}
+
+/* Адаптация для ландшафтной ориентации на мобильных устройствах */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        height: auto;
+        padding: 80px 0;
+    }
+    
+    .hero-content {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+    
+    .mobile-menu-btn {
+        top: 15px;
+    }
+    
+    nav ul {
+        top: 60px;
+    }
+}
+
+/* Оптимизация для iPad Pro и других крупных планшетов */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+    
+    .destination-grid,
+    .tour-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+    
+    .testimonial-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* Адаптация для устройств с touch-экраном */
+@media (hover: none) {
+    .btn:hover {
+        transform: none;
+    }
+    
+    .destination-card:hover {
+        transform: none;
+    }
+    
+    .tour-card:hover {
+        transform: none;
+    }
+    
+    .advantage-card:hover {
+        transform: none;
+    }
+    
+    /* Увеличиваем области клика для touch-устройств */
+    .btn, a, button, input[type="submit"], input[type="button"] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Убираем hover-эффекты для элементов навигации */
+    nav ul li a:hover {
+        color: inherit;
+    }
+    
+    nav ul li a.active:hover {
+        color: var(--primary);
+    }
+}
+
+/* Адаптация для устройств с высоким DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Увеличиваем размеры шрифтов для лучшей читаемости */
+    body {
+        -webkit-font-smoothing: antialiased;
+    }
+    
+    .hero h1 {
+        font-weight: 600;
+    }
+    
+    /* Увеличиваем размеры иконок */
+    .advantage-icon {
+        font-size: 3.5rem;
+    }
+    
+    .tour-meta i,
+    .rating i {
+        font-size: 1.1em;
+    }
+}
+
+/* Оптимизация для foldable устройств */
+@media (max-width: 600px) and (max-height: 300px) {
+    .hero {
+        height: auto;
+        padding: 40px 0;
+    }
+    
+    .hero-content {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    
+    .hero h1 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .hero p {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+    
+    .hero-buttons {
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    .hero-buttons a {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+}

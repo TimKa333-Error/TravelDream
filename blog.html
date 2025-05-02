@@ -1,3 +1,409 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:417a67786172f20e7b4ea10eb34ddab648f9ef33c6c778964d852eb8ea60ba49
-size 18413
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Блог о путешествиях - TravelDream</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/blog.css">
+    </head>
+    <body>
+        <header>
+            <div class="container header-container">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-plane"></i>
+                    TravelDream
+                </a>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <nav>
+                    <ul id="navMenu">
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="destinations.html">Направления</a></li>
+                        <li><a href="tours.html">Туры</a></li>
+                        <li><a href="blog.html" class="active">Блог</a></li>
+                        <li><a href="about.html">О нас</a></li>
+                        <li id="authMenuItem">
+                            <div class="auth-buttons" id="authButtons">
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+        <!-- Герой секция для блога -->
+        <section class="blog-hero">
+            <div class="container">
+                <div class="blog-hero-content">
+                    <h1>Блог о путешествиях</h1>
+                    <p>Полезные статьи, советы и впечатления от наших путешественников</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Основное содержимое блога -->
+        <main class="blog-main">
+            <div class="container">
+                <div class="blog-grid">
+                    <!-- Статья 1 -->
+                    <article class="blog-card">
+                        <div class="blog-card-img">
+                            <img src="https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Тайланд">
+                        </div>
+                        <div class="blog-card-content">
+                            <h2><a href="https://dzen.ru/a/ZBaDFObhOw9ssUga" target="_blank">10 причин посетить Тайланд</a></h2>
+                            <div class="blog-card-meta">
+                                <span><i class="fas fa-user"></i> Анна Петрова</span>
+                            </div>
+                            <p>Тайланд - это не только прекрасные пляжи, но и богатая культура, вкусная кухня и уникальные традиции. В этой статье мы расскажем, почему стоит выбрать Тайланд для вашего следующего путешествия.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Статья 2 -->
+                    <article class="blog-card">
+                        <div class="blog-card-img">
+                            <img src="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Италия">
+                        </div>
+                        <div class="blog-card-content">
+                            <h2><a href="https://italiamania.ru/tury-v-italy/gastronomicheskie-i-vinnye-tury/" target="_blank">Гастрономический тур по Италии</a></h2>
+                            <div class="blog-card-meta">
+                                <span><i class="fas fa-user"></i> Иван Сидоров</span>
+                            </div>
+                            <p>Откройте для себя настоящую итальянскую кухню за пределами туристических ресторанов. Мы подготовили маршрут, который позволит вам попробовать лучшие блюда регионов Италии.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Статья 3 -->
+                    <article class="blog-card">
+                        <div class="blog-card-img">
+                            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Турция">
+                        </div>
+                        <div class="blog-card-content">
+                            <h2><a href="https://www.antalyacityzone.com/ru/uznay-antaliyu/taynye-mesta-antalii-top-7-mest/97" target="_blank">Секретные места Анталии</a></h2>
+                            <div class="blog-card-meta">
+                                <span><i class="fas fa-user"></i> Мария Иванова</span>
+                            </div>
+                            <p>Анталия - это не только отели "все включено". Мы раскроем вам места, куда редко доходят туристы, но которые точно стоит посетить для настоящего погружения в культуру Турции.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Статья 4 -->
+                    <article class="blog-card">
+                        <div class="blog-card-img">
+                            <img src="https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Советы">
+                        </div>
+                        <div class="blog-card-content">
+                            <h2><a href="https://travel.yandex.ru/journal/kak-pravilno-sobrat-chemodan/" target="_blank">Как собрать чемодан в путешествие</a></h2>
+                            <div class="blog-card-meta">
+                                <span><i class="fas fa-user"></i> Ольга Смирнова</span>
+                            </div>
+                            <p>Собираетесь в поездку и не знаете, что взять с собой? Наш гид по сбору чемодана поможет вам ничего не забыть и при этом не перегрузить багаж ненужными вещами.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Статья 5 -->
+                    <article class="blog-card">
+                        <div class="blog-card-img">
+                            <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Природа">
+                        </div>
+                        <div class="blog-card-content">
+                            <h2><a href="https://dzen.ru/a/Zs7uM39NCVITNxWq" target="_blank">Лучшие национальные парки мира</a></h2>
+                            <div class="blog-card-meta">
+                                <span><i class="fas fa-user"></i> Алексей Ковалев</span>
+                            </div>
+                            <p>Для любителей природы мы подготовили подборку самых впечатляющих национальных парков, где вы сможете увидеть уникальные ландшафты и редких животных в их естественной среде обитания.</p>
+                        </div>
+                    </article>
+                    
+                    <!-- Статья 6 -->
+                    <article class="blog-card">
+                        <div class="blog-card-img">
+                            <img src="https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Бюджет">
+                        </div>
+                        <div class="blog-card-content">
+                            <h2><a href="https://travel.yandex.ru/journal/budget-travel/" target="_blank">Как путешествовать бюджетно</a></h2>
+                            <div class="blog-card-meta">
+                                <span><i class="fas fa-user"></i> Дмитрий Соколов</span>
+                            </div>
+                            <p>Путешествия не обязательно должны быть дорогими. Мы расскажем о лайфхаках, которые помогут вам сэкономить на перелетах, жилье и питании без потери комфорта.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <div class="footer-logo">
+                            <i class="fas fa-plane"></i>
+                            TravelDream
+                        </div>
+                        <p class="footer-about">С 2010 года создаём незабываемые путешествия для наших клиентов. Более 15,000 довольных туристов по всему миру.</p>
+                    </div>
+                    
+                    <div class="footer-col">
+                        <h3>Социальные сети</h3>
+                        <ul class="footer-social-list">
+                            <li>
+                                <a href="#">
+                                    <span class="social-icon-circle"><i class="fab fa-whatsapp"></i></span>
+                                    <span>WhatsApp</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <span class="social-icon-circle"><i class="fab fa-vk"></i></span>
+                                    <span>ВКонтакте</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://t.me/TravelHelperTourBot" target="_blank">
+                                    <span class="social-icon-circle"><i class="fab fa-telegram"></i></span>
+                                    <span>Telegram (бот)</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-col">
+                        <h3>Компания</h3>
+                        <ul class="footer-links">
+                            <li><a href="about.html">О нас</a></li>
+                            <li><a href="blog.html">Блог</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-col">
+                        <h3>Контакты</h3>
+                        <ul class="footer-contact">
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Москва, ул. Туристическая, 15</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone-alt"></i>
+                                <span>+7 (495) 123-45-67</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <span>info@traveldream.ru</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-clock"></i>
+                                <span>Пн-Пт: 9:00-20:00</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <div class="footer-copyright">
+                        <p>&copy; 2025 TravelDream. Все права защищены.</p>
+                    </div>
+                    
+                    <div class="footer-legal">
+                        <a>Политика конфиденциальности</a>
+                        <a>Условия использования</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        
+        <style>
+            /* Футер */
+        .footer {
+            background-color: #264653;
+            color: white;
+            padding-top: 80px;
+            position: relative;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding-bottom: 40px;
+        }
+        
+        .footer-col {
+            margin-bottom: 30px;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #2a9d8f;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .footer-logo i {
+            margin-right: 10px;
+            color: #e9c46a;
+        }
+        
+        .footer-about {
+            margin-bottom: 25px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .footer-social-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-social-list li {
+            margin-bottom: 15px;
+        }
+        
+        .footer-social-list a {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .footer-social-list a:hover {
+            color: #e9c46a;
+        }
+        
+        .social-icon-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+        
+        .footer-social-list a:hover .social-icon-circle {
+            background-color: #2a9d8f;
+            transform: translateY(-3px);
+        }
+        
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-contact li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .footer-contact i {
+            margin-right: 12px;
+            color: #2a9d8f;
+            font-size: 1.1rem;
+            margin-top: 3px;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 25px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-copyright {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+        
+        .footer-legal {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-legal a {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+        
+        .footer-legal a:hover {
+            color: white;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .footer-legal {
+                justify-content: center;
+            }
+        }   
+        </style>
+        <script src="js/blog.js"></script>
+</html> 

@@ -1,3 +1,737 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:370799cb7136973460f9cd9d0ac4d42be30717de711fcafec8c4255e325e0568
-size 36594
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Туры - TravelDream</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tours.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-plane"></i>
+                TravelDream
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="destinations.html">Направления</a></li>
+                    <li><a href="tours.html" class="active">Туры</a></li>
+                    <li><a href="blog.html">Блог</a></li>
+                    <li><a href="about.html">О нас</a></li>
+                    <li id="authMenuItem">
+                        <div class="auth-buttons" id="authButtons">
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="tours-page">
+        <div class="container">
+            <div class="page-header">
+                <h1>Наши туры</h1>
+                <p>Подберите идеальный тур для вашего отдыха</p>
+                <div class="bot-link-container">
+                    Более подробно посмотреть о достопримечательностях туров можно 
+                    <a href="https://t.me/TravelHelperTourBot" target="_blank" class="bot-link">по этой ссылке</a>
+                </div>
+            </div>
+            
+            <div class="search-filters">
+                <div class="search-results-info">
+                    Найдено <span id="totalTours">12</span> туров
+                </div>
+                
+                <div class="sort-options">
+                    <label for="sort">Сортировать:</label>
+                    <select id="sort">
+                        <option value="default">По умолчанию</option>
+                        <option value="price_asc">По возрастанию цены</option>
+                        <option value="price_desc">По убыванию цены</option>
+                        <option value="duration">По длительности</option>
+                        <option value="rating">По рейтингу</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="tours-grid" id="toursContainer">
+                <!-- Турция -->
+                <div class="tour-card" data-price="650" data-duration="10" data-rating="4.8">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Турция">
+                        <div class="card-badge">Хит продаж</div>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Анталия - все включено</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 10 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 4.8</span>
+                        </div>
+                        <p class="tour-description">Отдых в 5-звездочном отеле с собственным пляжем, питание "все включено", экскурсии по историческим местам.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">650$</div>
+                                <div class="price-per">325$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="1">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Италия -->
+                <div class="tour-card" data-price="850" data-duration="8" data-rating="4.9">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1533676802871-eca1ae998cd5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Италия">
+                        <div class="card-badge">Новинка</div>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Рим - Венеция - Флоренция</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 8 дней</span>
+                            <span><i class="fas fa-users"></i> 1-4 человека</span>
+                            <span><i class="fas fa-star"></i> 4.9</span>
+                        </div>
+                        <p class="tour-description">Экскурсионный тур по главным городам Италии с посещением музеев, галерей и исторических мест.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">850$</div>
+                                <div class="price-per">425$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="2">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Таиланд -->
+                <div class="tour-card" data-price="720" data-duration="12" data-rating="4.7">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1528181304800-259b08848526?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Таиланд">
+                        <div class="card-badge">Акция</div>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Пхукет + острова</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 12 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 4.7</span>
+                        </div>
+                        <p class="tour-description">Пляжный отдых на лучших курортах Пхукета с экскурсиями на острова Пхи-Пхи, Джеймса Бонда и др.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">720$</div>
+                                <div class="price-per">360$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="3">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ОАЭ -->
+                <div class="tour-card" data-price="1200" data-duration="7" data-rating="4.9">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="ОАЭ">
+                        <div class="card-badge">Люкс</div>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Дубай - роскошный отдых</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 7 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 4.9</span>
+                        </div>
+                        <p class="tour-description">Отдых в 5-звездочном отеле Burj Al Arab, экскурсии по городу, шопинг в лучших торговых центрах.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">1200$</div>
+                                <div class="price-per">600$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="4">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Греция -->
+                <div class="tour-card" data-price="780" data-duration="9" data-rating="4.8">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Греция">
+                    </div>
+                    <div class="tour-info">
+                        <h3>Острова Санторини и Миконос</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 9 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 4.8</span>
+                        </div>
+                        <p class="tour-description">Романтический тур по самым красивым островам Греции с посещением Афин и круизом по Эгейскому морю.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">780$</div>
+                                <div class="price-per">390$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="5">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Мальдивы -->
+                <div class="tour-card" data-price="1500" data-duration="10" data-rating="5.0">
+                    <div class="card-img">
+                        <img src="https://pandatur.md/files/31e6b9ef20ecf0317414e5a257dc0241.webp" alt="Мальдивы">
+                        <div class="card-badge">Премиум</div>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Мальдивы - бунгало над водой</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 10 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 5.0</span>
+                        </div>
+                        <p class="tour-description">Отдых в роскошном бунгало над лазурной водой, дайвинг, спа-процедуры и романтические ужины.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">1500$</div>
+                                <div class="price-per">750$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="6">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Франция -->
+                <div class="tour-card" data-price="950" data-duration="10" data-rating="4.7">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1431274172761-fca41d930114?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Франция">
+                    </div>
+                    <div class="tour-info">
+                        <h3>Париж и Лазурный берег</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 10 дней</span>
+                            <span><i class="fas fa-users"></i> 1-4 человека</span>
+                            <span><i class="fas fa-star"></i> 4.7</span>
+                        </div>
+                        <p class="tour-description">Экскурсии по Парижу, посещение Лувра и Эйфелевой башни, отдых в Ницце и Каннах.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">950$</div>
+                                <div class="price-per">475$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="7">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Египет -->
+                <div class="tour-card" data-price="450" data-duration="8" data-rating="4.5">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Египет">
+                        <div class="card-badge">Акция</div>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Хургада - дайвинг и пирамиды</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 8 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 4.5</span>
+                        </div>
+                        <p class="tour-description">Пляжный отдых в Хургаде с экскурсиями к пирамидам Гизы и дайвингом в Красном море.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">450$</div>
+                                <div class="price-per">225$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="8">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Испания -->
+                <div class="tour-card" data-price="680" data-duration="7" data-rating="4.8">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Испания">
+                    </div>
+                    <div class="tour-info">
+                        <h3>Барселона и Коста-Брава</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 7 дней</span>
+                            <span><i class="fas fa-users"></i> 1-4 человека</span>
+                            <span><i class="fas fa-star"></i> 4.8</span>
+                        </div>
+                        <p class="tour-description">Экскурсии по Барселоне, посещение творений Гауди, отдых на пляжах Коста-Бравы.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">680$</div>
+                                <div class="price-per">340$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="9">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Бали -->
+                <div class="tour-card" data-price="1100" data-duration="12" data-rating="4.9">
+                    <div class="card-img">
+                        <img src="https://avatars.mds.yandex.net/i?id=8684eaee55ee7522f1295dbe9c2f2fbcc5f184ae-5232569-images-thumbs&n=13" alt="Бали">
+                        <div class="card-badge">Новинка</div>
+                    </div>
+                    <div class="tour-info">
+                        <h3>Бали</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 12 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 4.9</span>
+                        </div>
+                        <p class="tour-description">Экзотический отдых на Бали с посещением храмов, водопадов и рисовых террас.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">1100$</div>
+                                <div class="price-per">550$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="10">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Вьетнам -->
+                <div class="tour-card" data-price="750" data-duration="10" data-rating="4.6">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1528127269322-539801943592?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Вьетнам">
+                    </div>
+                    <div class="tour-info">
+                        <h3>Вьетнам - Нячанг и Хошимин</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 10 дней</span>
+                            <span><i class="fas fa-users"></i> 2 взрослых</span>
+                            <span><i class="fas fa-star"></i> 4.6</span>
+                        </div>
+                        <p class="tour-description">Пляжный отдых в Нячанге и экскурсии по Хошимину с посещением дельты Меконга.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">750$</div>
+                                <div class="price-per">375$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="11">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Чехия -->
+                <div class="tour-card" data-price="600" data-duration="7" data-rating="4.8">
+                    <div class="card-img">
+                        <img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Чехия">
+                    </div>
+                    <div class="tour-info">
+                        <h3>Прага - романтика Старого города</h3>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-calendar-alt"></i> 7 дней</span>
+                            <span><i class="fas fa-users"></i> 1-4 человека</span>
+                            <span><i class="fas fa-star"></i> 4.8</span>
+                        </div>
+                        <p class="tour-description">Экскурсии по Праге, посещение Пражского града, Карлова моста и старинных замков.</p>
+                        <div class="tour-footer">
+                            <div class="price-info">
+                                <div class="price">600$</div>
+                                <div class="price-per">300$ / чел</div>
+                            </div>
+                            <div class="tour-actions">
+                                <button class="btn btn-small btn-details" data-tour="12">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pagination" id="pagination">
+                <a href="#" class="page-link prev" id="prevPage">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <a href="#" class="page-link active" data-page="1">1</a>
+                <a href="#" class="page-link" data-page="2">2</a>
+                <a href="#" class="page-link next" id="nextPage">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Модальное окно с подробной информацией -->
+    <div class="modal" id="tourModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h2 id="modalTourTitle">Название тура</h2>
+                <div class="tour-meta">
+                    <span><i class="fas fa-calendar-alt"></i> <span id="modalTourDuration">10 дней</span></span>
+                    <span><i class="fas fa-users"></i> <span id="modalTourPeople">2 взрослых</span></span>
+                    <span><i class="fas fa-star"></i> <span id="modalTourRating">4.8</span></span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="tour-details">
+                    <div>
+                        <div class="tour-gallery">
+                            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Тур">
+                            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Тур">
+                            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Тур">
+                            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Тур">
+                        </div>
+                        
+                        <div class="tour-features">
+                            <h3>Особенности тура:</h3>
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <i class="fas fa-utensils"></i>
+                                    <span>Питание: все включено</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-hotel"></i>
+                                    <span>5-звездочный отель</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-plane"></i>
+                                    <span>Авиаперелет включен</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-map-marked-alt"></i>
+                                    <span>3 экскурсии</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-swimming-pool"></i>
+                                    <span>Бассейн и СПА</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-wifi"></i>
+                                    <span>Бесплатный Wi-Fi</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="price-info">
+                            <div class="price" id="modalTourPrice">650$</div>
+                            <div class="price-per" id="modalTourPricePer">325$ / чел</div>
+                        </div>
+                        
+                        <div class="full-description" id="modalTourDescription">
+                            <h3>Полное описание:</h3>
+                            <p>Отдых в 5-звездочном отеле с собственным пляжем, питание "все включено", экскурсии по историческим местам.</p>
+                            <p>Отель расположен в живописном месте с видом на море. В стоимость включено: проживание, питание, авиаперелет, трансферы, медицинская страховка.</p>
+                            <p>Экскурсионная программа включает посещение древнего города, музея под открытым небом и круиз по морю.</p>
+                            <p>Для детей предусмотрена анимация и детский клуб. На территории отеля: 3 ресторана, 4 бара, фитнес-центр, СПА-центр.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-accent" id="bookTourBtn">Забронировать тур</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        
+    </script>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-plane"></i>
+                        TravelDream
+                    </div>
+                    <p class="footer-about">С 2010 года создаём незабываемые путешествия для наших клиентов. Более 15,000 довольных туристов по всему миру.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Социальные сети</h3>
+                    <ul class="footer-social-list">
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-whatsapp"></i></span>
+                                <span>WhatsApp</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="social-icon-circle"><i class="fab fa-vk"></i></span>
+                                <span>ВКонтакте</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://t.me/TravelHelperTourBot" target="_blank">
+                                <span class="social-icon-circle"><i class="fab fa-telegram"></i></span>
+                                <span>Telegram (бот)</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Компания</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">О нас</a></li>
+                        <li><a href="blog.html">Блог</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Контакты</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Москва, ул. Туристическая, 15</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>+7 (495) 123-45-67</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@traveldream.ru</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Пн-Пт: 9:00-20:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 TravelDream. Все права защищены.</p>
+                </div>
+                
+                <div class="footer-legal">
+                    <a>Политика конфиденциальности</a>
+                    <a>Условия использования</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <style>
+        /* Футер */
+    .footer {
+        background-color: #264653;
+        color: white;
+        padding-top: 80px;
+        position: relative;
+        margin-top: 60px;
+    }
+    
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        padding-bottom: 40px;
+    }
+    
+    .footer-col {
+        margin-bottom: 30px;
+    }
+    
+    .footer-col h3 {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .footer-col h3::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 3px;
+        background-color: #2a9d8f;
+    }
+    
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: white;
+    }
+    
+    .footer-logo i {
+        margin-right: 10px;
+        color: #e9c46a;
+    }
+    
+    .footer-about {
+        margin-bottom: 25px;
+        line-height: 1.6;
+        opacity: 0.9;
+    }
+    
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+    
+    .footer-links a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .footer-links a:hover {
+        color: white;
+        transform: translateX(5px);
+    }
+    
+    .footer-social-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-social-list li {
+        margin-bottom: 15px;
+    }
+    
+    .footer-social-list a {
+        display: flex;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover {
+        color: #e9c46a;
+    }
+    
+    .social-icon-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+    
+    .footer-social-list a:hover .social-icon-circle {
+        background-color: #2a9d8f;
+        transform: translateY(-3px);
+    }
+    
+    .footer-contact {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .footer-contact li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .footer-contact i {
+        margin-right: 12px;
+        color: #2a9d8f;
+        font-size: 1.1rem;
+        margin-top: 3px;
+    }
+    
+    .footer-bottom {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: 25px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .footer-copyright {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+    }
+    
+    .footer-legal {
+        display: flex;
+        gap: 20px;
+    }
+    
+    .footer-legal a {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+        transition: color 0.3s;
+        text-decoration: none;
+    }
+    
+    .footer-legal a:hover {
+        color: white;
+    }
+    
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .footer-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .footer-bottom {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .footer-legal {
+            justify-content: center;
+        }
+    }   
+    </style>
+    <script src="js/tour.js"></script>
+</body>
+</html>
