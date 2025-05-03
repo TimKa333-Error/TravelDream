@@ -1,8 +1,102 @@
 document.addEventListener('DOMContentLoaded', function() {
     const registerForm = document.getElementById('registerForm');
     const passwordInput = document.getElementById('password');
+    const phoneInput = document.getElementById('phone');
     const passwordStrengthBars = document.querySelectorAll('.strength-bar');
     const passwordStrengthText = document.querySelector('.strength-text');
+    
+    // Обработчик ввода номера телефона
+    phoneInput.addEventListener('input', function(e) {
+        formatPhoneInput(this);
+    });
+    
+    // Функция форматирования ввода телефона
+    function formatPhoneInput(input) {
+        // Удаляем все нецифровые символы
+        let numbers = input.value.replace(/\D/g, '');
+        
+        // Если номер начинается с 8, заменяем на 7 (для российских номеров)
+        if (numbers.startsWith('8') && numbers.length === 11) {
+            numbers = '7' + numbers.substring(1);
+        }
+        
+        // Если номер начинается не с 7, добавляем 7 (если это российский номер)
+        if (!numbers.startsWith('7') && numbers.length <= 10) {
+            numbers = '7' + numbers;
+        }
+        
+        // Ограничиваем длину номера (11 цифр для российских номеров)
+        numbers = numbers.substring(0, 11);
+        
+        // Форматируем номер в нужный формат
+        let formatted = '';
+        if (numbers.length > 0) {
+            formatted = '+7 (';
+            if (numbers.length > 1) {
+                formatted += numbers.substring(1, 4);
+            }
+            if (numbers.length > 4) {
+                formatted += ') ' + numbers.substring(4, 7);
+            }
+            if (numbers.length > 7) {
+                formatted += '-' + numbers.substring(7, 9);
+            }
+            if (numbers.length > 9) {
+                formatted += '-' + numbers.substring(9, 11);
+            }
+        }
+        
+        // Устанавливаем отформатированное значение
+        input.value = formatted;
+        
+        // Проверяем валидность номера
+        validatePhoneInput(input);
+    }
+    
+    // Функция проверки валидности номера
+    function validatePhoneInput(input) {
+        const isValid = input.value.replace(/\D/g, '').length === 11;
+        input.classList.toggle('invalid', !isValid);
+        return isValid;
+    }
+    
+    // Модифицированная функция валидации формы
+    function validateForm({fullName, email, phone, password, confirmPassword, agreeTerms}) {
+        if (!fullName || !email || !phone || !password || !confirmPassword) {
+            return 'Пожалуйста, заполните все поля';
+        }
+        
+        if (!agreeTerms) {
+            return 'Необходимо принять условия использования';
+        }
+        
+        if (password.length < 6) {
+            return 'Пароль должен содержать не менее 6 символов';
+        }
+        
+        if (calculatePasswordStrength(password) < 3) {
+            return 'Пароль слишком слабый. Используйте буквы, цифры и специальные символы';
+        }
+        
+        if (password !== confirmPassword) {
+            return 'Пароли не совпадают';
+        }
+        
+        if (!validateEmail(email)) {
+            return 'Введите корректный email';
+        }
+        
+        if (!validatePhoneInput(phoneInput)) {
+            return 'Введите корректный номер телефона';
+        }
+        
+        const existingUser = JSON.parse(localStorage.getItem('userData') || 'null');
+        if (existingUser && existingUser.email === email) {
+            return 'Пользователь с таким email уже зарегистрирован';
+        }
+        
+        return null;
+    }
     
     // Обработчики кнопок показа/скрытия пароля
     const setupTogglePasswordButtons = () => {
@@ -45,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = {
             fullName: document.getElementById('fullName').value.trim(),
             email: document.getElementById('email').value.trim(),
-            phone: document.getElementById('phone').value.trim(),
+            phone: phoneInput.value.trim(),
             password: passwordInput.value,
             confirmPassword: document.getElementById('confirmPassword').value,
             agreeTerms: document.getElementById('agreeTerms').checked
@@ -62,44 +156,6 @@ document.addEventListener('DOMContentLoaded', function() {
         createUser(formData);
     });
     
-    // Функция валидации формы
-    function validateForm({fullName, email, phone, password, confirmPassword, agreeTerms}) {
-        if (!fullName || !email || !phone || !password || !confirmPassword) {
-            return 'Пожалуйста, заполните все поля';
-        }
-        
-        if (!agreeTerms) {
-            return 'Необходимо принять условия использования';
-        }
-        
-        if (password.length < 6) {
-            return 'Пароль должен содержать не менее 6 символов';
-        }
-        
-        if (calculatePasswordStrength(password) < 3) {
-            return 'Пароль слишком слабый. Используйте буквы, цифры и специальные символы';
-        }
-        
-        if (password !== confirmPassword) {
-            return 'Пароли не совпадают';
-        }
-        
-        if (!validateEmail(email)) {
-            return 'Введите корректный email';
-        }
-        
-        if (!validatePhone(phone)) {
-            return 'Введите номер в формате +7 (XXX) XXX-XX-XX';
-        }
-        
-        const existingUser = JSON.parse(localStorage.getItem('userData') || 'null');
-        if (existingUser && existingUser.email === email) {
-            return 'Пользователь с таким email уже зарегистрирован';
-        }
-        
-        return null;
-    }
-    
     // Функция создания пользователя
     function createUser({fullName, email, phone, password}) {
         const nameParts = fullName.split(' ').filter(part => part.trim() !== '');
@@ -108,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
             firstName: nameParts[0] || '',
             lastName: nameParts.slice(1).join(' ') || '',
             email,
-            phone: formatPhone(phone),
+            phone: phoneInput.value, // уже отформатирован
             password,
             avatar: `https://randomuser.me/api/portraits/${Math.random() > 0.5 ? 'men' : 'women'}/${Math.floor(Math.random() * 100)}.jpg`,
             balance: 0,
@@ -124,15 +180,6 @@ document.addEventListener('DOMContentLoaded', function() {
             showError('Ошибка сохранения данных. Попробуйте снова.');
             console.error('Ошибка:', error);
         }
-    }
-    
-    // Функция форматирования телефона
-    function formatPhone(phone) {
-        const cleaned = phone.replace(/\D/g, '');
-        if (cleaned.startsWith('8') && cleaned.length === 11) {
-            return '+7' + cleaned.substring(1);
-        }
-        return cleaned.startsWith('7') ? '+' + cleaned : '+7' + cleaned;
     }
     
     // Остальные вспомогательные функции
@@ -163,10 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function validateEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-    
-    function validatePhone(phone) {
-        return /^(\+7|8)[\s\-]?\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}$/.test(phone);
     }
     
     function showError(message) {

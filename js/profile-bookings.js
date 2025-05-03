@@ -25,10 +25,6 @@ const App = {
             return;
         }
         
-        // Приоритеты для аватара:
-        // 1. Отдельно сохраненный в localStorage
-        // 2. Из userData
-        // 3. Дефолтный аватар
         const savedAvatar = localStorage.getItem('profileAvatar') || 
                           userData.avatar || 
                           'https://randomuser.me/api/portraits/men/32.jpg';

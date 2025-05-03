@@ -1,14 +1,24 @@
+/* Основные стили для контейнера бронирований */
 .bookings-container {
-    padding: 30px;
+    padding: 20px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
 }
 
+/* Стили для табов */
 .bookings-tabs {
     display: flex;
     border-bottom: 1px solid #eee;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+}
+
+.bookings-tabs::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
 }
 
 .tab-btn {
@@ -20,6 +30,8 @@
     color: var(--gray);
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .tab-btn.active {
@@ -27,6 +39,7 @@
     border-bottom-color: var(--primary);
 }
 
+/* Карточка бронирования */
 .booking-card {
     margin-bottom: 20px;
     border-radius: 10px;
@@ -34,26 +47,32 @@
     box-shadow: 0 3px 10px rgba(0,0,0,0.05);
     transition: transform 0.3s ease;
     border: 1px solid #eee;
+    background: white;
 }
 
 .booking-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
 }
 
+/* Шапка карточки */
 .booking-header {
-    padding: 15px 20px;
+    padding: 15px;
     background: #f8f9fa;
     border-bottom: 1px solid #eee;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
+/* Статусы бронирования */
 .booking-status {
     padding: 5px 10px;
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 600;
+    display: inline-block;
 }
 
 .booking-status.confirmed {
@@ -71,18 +90,19 @@
     color: #e74c3c;
 }
 
+/* Контент карточки */
 .booking-content {
-    padding: 20px;
+    padding: 15px;
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .booking-image {
-    width: 150px;
-    height: 100px;
+    width: 100%;
+    height: 180px;
     border-radius: 5px;
     overflow: hidden;
-    flex-shrink: 0;
 }
 
 .booking-image img {
@@ -95,46 +115,66 @@
     flex-grow: 1;
 }
 
+.booking-title {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: var(--secondary);
+}
+
 .booking-meta {
     margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
 }
 
 .meta-item {
-    margin-bottom: 8px;
     display: flex;
     align-items: center;
     gap: 8px;
     color: #555;
+    font-size: 0.9rem;
 }
 
+.meta-item i {
+    color: var(--primary);
+    min-width: 16px;
+}
 
+/* Блок с ценой */
 .booking-price {
-    text-align: right;
-    min-width: 150px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
 }
 
 .price-total {
     font-size: 1.2rem;
     font-weight: 700;
     color: #2a9d8f;
+    text-align: right;
 }
 
 .price-per {
     font-size: 0.9rem;
     color: #777;
+    text-align: right;
 }
 
+/* Действия с бронированием */
 .booking-actions {
-    padding: 15px 20px;
+    padding: 15px;
     border-top: 1px solid #eee;
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
+/* Состояние пустого списка */
 .empty-state {
     text-align: center;
-    padding: 50px 20px;
+    padding: 40px 20px;
 }
 
 .empty-state i {
@@ -143,6 +183,18 @@
     margin-bottom: 20px;
 }
 
+.empty-state h3 {
+    color: var(--secondary);
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #777;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Модальные окна */
 .modal {
     display: none;
     position: fixed;
@@ -154,6 +206,8 @@
     z-index: 1000;
     align-items: center;
     justify-content: center;
+    padding: 15px;
+    overflow-y: auto;
 }
 
 .modal-content {
@@ -161,8 +215,15 @@
     border-radius: 10px;
     width: 100%;
     max-width: 600px;
-    padding: 30px;
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .modal-header {
@@ -170,10 +231,16 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    padding: 20px 20px 0 20px;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
 }
 
 .modal-header h3 {
     color: var(--secondary);
+    margin: 0;
 }
 
 .btn-close-modal {
@@ -182,6 +249,12 @@
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--gray);
+    padding: 5px;
+    line-height: 1;
+}
+
+.modal-body {
+    padding: 0 20px;
 }
 
 .modal-footer {
@@ -189,8 +262,13 @@
     justify-content: flex-end;
     gap: 10px;
     margin-top: 20px;
+    padding: 0 20px 20px 20px;
+    position: sticky;
+    bottom: 0;
+    background: white;
 }
 
+/* Детали бронирования в модальном окне */
 .booking-details-modal {
     display: grid;
     gap: 20px;
@@ -211,8 +289,26 @@
 
 .details-grid {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 10px 20px;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #eee;
+}
+
+.detail-label {
+    color: #777;
+    font-weight: 500;
+}
+
+.detail-value {
+    color: var(--secondary);
+    font-weight: 600;
+    text-align: right;
 }
 
 .booking-description {
@@ -221,17 +317,19 @@
     border-top: 1px solid #eee;
 }
 
+/* Кнопки */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
+    padding: 10px 16px;
     border-radius: 8px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
     border: none;
     font-size: 0.9rem;
+    min-height: 44px; /* Для touch-устройств */
 }
 
 .btn i {
@@ -275,437 +373,94 @@
     background-color: #c0392b;
 }
 
-/* Стили для кнопки удаления в завершенных турах */
-.btn-delete-completed {
-    padding: 8px 10px;
-    width: 36px;
-    color: #e74c3c;
-    border-color: #e74c3c;
-    transition: all 0.3s ease;
+.btn-sm {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    min-height: 36px;
 }
 
-.btn-delete-completed:hover {
+/* Стили для кнопки удаления */
+.btn-delete {
+    padding: 8px 10px;
+    width: 36px;
+    height: 36px;
+    color: #e74c3c;
+    border: 2px solid #e74c3c;
+    background: transparent;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete:hover {
     background-color: rgba(231, 76, 60, 0.1);
     transform: scale(1.05);
 }
 
-.btn-delete-completed i {
+.btn-delete i {
     margin-right: 0;
     font-size: 0.9rem;
 }
 
-/* Стили для кнопки удаления в отмененных турах */
-.btn-delete-cancelled {
-    padding: 8px 10px;
-    width: 36px;
-    color: #e74c3c;
-    border-color: #e74c3c;
-    transition: all 0.3s ease;
-}
-
-.btn-delete-cancelled:hover {
-    background-color: rgba(231, 76, 60, 0.1);
-    transform: scale(1.05);
-}
-
-.btn-delete-cancelled i {
-    margin-right: 0;
-    font-size: 0.9rem;
-}
-
-/* Медиа-запросы для адаптации под мобильные устройства */
-
-@media (max-width: 992px) {
-    /* Планшеты и небольшие ноутбуки */
-    .hero h1 {
-        font-size: 2.5rem;
+/* Адаптивные стили */
+@media (min-width: 576px) {
+    .booking-content {
+        flex-direction: row;
     }
     
-    .hero p {
-        font-size: 1.1rem;
+    .booking-image {
+        width: 150px;
+        height: 100px;
     }
     
-    .search-form {
+    .details-grid {
+        grid-template-columns: 1fr 2fr;
+    }
+}
+
+@media (min-width: 768px) {
+    .bookings-container {
+        padding: 30px;
+    }
+    
+    .booking-content {
+        gap: 20px;
+    }
+    
+    .booking-meta {
         grid-template-columns: 1fr 1fr;
     }
     
-    .destination-grid,
-    .tour-grid,
-    .testimonial-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    }
-    
-    .video-container {
-        width: 90%;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .booking-price {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+        text-align: right;
+        min-width: 150px;
     }
 }
 
-@media (max-width: 768px) {
-    /* Планшеты и крупные смартфоны */
-    .header-container {
-        flex-wrap: wrap;
-    }
-    
-    nav ul {
-        display: none;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        right: 0;
-        background-color: white;
-        flex-direction: column;
-        padding: 20px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        width: 100%;
-    }
-    
-    nav ul.show {
-        display: flex;
-    }
-    
-    nav ul li {
-        margin: 10px 0;
-        width: 100%;
-    }
-
-    .mobile-menu-btn {
-        display: block;
-    }
-    
-    .search-form {
-        grid-template-columns: 1fr;
-    }
-    
-    .search-box {
-        transform: translateY(20px);
-    }
-    
-    .newsletter-form,
-    .hero-buttons {
-        flex-direction: column;
-    }
-    
-    .newsletter-form input,
-    .hero-buttons a {
-        border-radius: 5px;
-        margin-bottom: 10px;
-        width: 100%;
-    }
-    
-    .newsletter-form button,
-    .hero-buttons a {
-        border-radius: 5px;
-        width: 100%;
-    }
-    
-    /* Адаптивные стили для меню профиля */
-    .nav-profile {
-        width: 100%;
-    }
-    
-    .profile-dropdown {
-        position: static;
-        box-shadow: none;
-        width: 100%;
-    }
-    
-    .profile-link {
-        justify-content: center;
-        padding: 10px 0;
-    }
-    
-    .auth-buttons {
-        margin-left: 0;
-        margin-top: 10px;
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .btn-login, 
-    .btn-register,
-    .btn-profile,
-    .btn-logout {
-        width: 100%;
-        text-align: center;
-        justify-content: center;
-    }
-    
-    /* Герой секция */
-    .hero {
-        height: 90vh;
-        min-height: 500px;
-    }
-    
-    .hero h1 {
-        font-size: 2rem;
-    }
-    
-    .hero p {
-        font-size: 1rem;
-    }
-    
-    /* Карточки */
-    .destination-card,
-    .tour-card {
-        margin-bottom: 20px;
-    }
-    
-    /* Формы */
-    .form-row {
-        flex-direction: column;
-        gap: 0;
-    }
-    
-    /* Видео секция */
-    .video-container {
-        width: 100%;
-    }
-    
-    /* Статистика */
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    /* Футер */
-    .footer-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .footer-bottom {
-        flex-direction: column;
-        gap: 15px;
-    }
-}
-
-@media (max-width: 576px) {
-    /* Смартфоны */
-    .hero {
-        height: 80vh;
-        min-height: 400px;
-    }
-    
-    .hero h1 {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-    }
-    
-    .section-title {
-        font-size: 1.8rem;
-    }
-    
-    .container {
-        padding: 0 15px;
-    }
-    
-    .logo {
-        font-size: 1.5rem;
-    }
-    
-    .mobile-menu-btn {
-        font-size: 1.3rem;
-    }
-    
-    /* Карточки направлений */
-    .destination-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    /* Карточки туров */
-    .tour-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .tour-meta {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    /* Отзывы */
-    .testimonial-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .testimonial-author {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .author-img {
-        margin-right: 0;
-        margin-bottom: 15px;
-    }
-    
-    /* Преимущества */
-    .advantages-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    /* Видео плеер */
-    .plyr--video {
-        border-radius: 0;
-    }
-    
-    /* Модальные окна */
-    .modal-content {
-        width: 95%;
-        margin: 10px auto;
-    }
-}
-
-/* Дополнительные адаптивные стили для очень маленьких экранов */
 @media (max-width: 400px) {
-    .hero h1 {
-        font-size: 1.5rem;
+    .booking-actions {
+        justify-content: space-between;
     }
     
     .btn {
-        padding: 8px 15px;
-        font-size: 0.9rem;
-    }
-    
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        padding: 10px 12px;
-    }
-    
-    .card-img {
-        height: 180px;
-    }
-    
-    .testimonial-text::before {
-        font-size: 2rem;
-        top: -10px;
+        flex-grow: 1;
     }
 }
 
-/* Адаптация для ландшафтной ориентации на мобильных устройствах */
-@media (max-height: 500px) and (orientation: landscape) {
-    .hero {
-        height: auto;
-        padding: 80px 0;
-    }
-    
-    .hero-content {
-        padding-top: 40px;
-        padding-bottom: 40px;
-    }
-    
-    .mobile-menu-btn {
-        top: 15px;
-    }
-    
-    nav ul {
-        top: 60px;
-    }
-}
-
-/* Оптимизация для iPad Pro и других крупных планшетов */
-@media (min-width: 768px) and (max-width: 1024px) {
-    .hero h1 {
-        font-size: 2.8rem;
-    }
-    
-    .destination-grid,
-    .tour-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    }
-    
-    .testimonial-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    }
-}
-
-/* Адаптация для устройств с touch-экраном */
+/* Оптимизация для touch-устройств */
 @media (hover: none) {
-    .btn:hover {
+    .btn:hover, 
+    .booking-card:hover, 
+    .btn-delete:hover {
         transform: none;
     }
     
-    .destination-card:hover {
-        transform: none;
-    }
-    
-    .tour-card:hover {
-        transform: none;
-    }
-    
-    .advantage-card:hover {
-        transform: none;
-    }
-    
-    /* Увеличиваем области клика для touch-устройств */
-    .btn, a, button, input[type="submit"], input[type="button"] {
-        min-height: 44px;
-        min-width: 44px;
-    }
-    
-    /* Убираем hover-эффекты для элементов навигации */
-    nav ul li a:hover {
-        color: inherit;
-    }
-    
-    nav ul li a.active:hover {
-        color: var(--primary);
+    .btn:active {
+        opacity: 0.8;
     }
 }
-
-/* Адаптация для устройств с высоким DPI */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    /* Увеличиваем размеры шрифтов для лучшей читаемости */
-    body {
-        -webkit-font-smoothing: antialiased;
-    }
-    
-    .hero h1 {
-        font-weight: 600;
-    }
-    
-    /* Увеличиваем размеры иконок */
-    .advantage-icon {
-        font-size: 3.5rem;
-    }
-    
-    .tour-meta i,
-    .rating i {
-        font-size: 1.1em;
-    }
-}
-
-/* Оптимизация для foldable устройств */
-@media (max-width: 600px) and (max-height: 300px) {
-    .hero {
-        height: auto;
-        padding: 40px 0;
-    }
-    
-    .hero-content {
-        padding-top: 20px;
-        padding-bottom: 20px;
-    }
-    
-    .hero h1 {
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-    }
-    
-    .hero p {
-        font-size: 0.9rem;
-        margin-bottom: 15px;
-    }
-    
-    .hero-buttons {
-        flex-direction: row;
-        gap: 10px;
-    }
-    
-    .hero-buttons a {
-        padding: 8px 12px;
-        font-size: 0.8rem;
-    }
-}
-
