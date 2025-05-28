@@ -1,14 +1,17 @@
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    // Проверяем статус авторизации
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const isLoggedIn = !!currentUser;
+
+    // Обновляем UI в зависимости от статуса авторизации
+    updateAuthUI(isLoggedIn, currentUser?.firstName);
+
     // Обработчик для кнопок "Забронировать"
     document.querySelectorAll('.btn-book').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Проверяем, авторизован ли пользователь
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            
             if (!isLoggedIn) {
-                // Если пользователь не авторизован, показываем сообщение и перенаправляем на страницу входа
                 alert('Для бронирования тура необходимо войти в систему');
                 window.location.href = 'login.html';
                 return;
@@ -16,48 +19,109 @@
             
             // Получаем данные о туре из карточки
             const card = this.closest('.tour-card');
-            const title = card.querySelector('h3').textContent;
-            const price = card.querySelector('.price').textContent;
-            const duration = card.querySelector('.tour-meta span:nth-child(1)').textContent;
-            const people = card.querySelector('.tour-meta span:nth-child(2)').textContent;
-            
-           
+            const tourData = {
+                id: card.dataset.tourId,
+                title: card.querySelector('h3').textContent,
+                price: card.querySelector('.price').textContent,
+                duration: card.querySelector('.tour-meta span:nth-child(1)').textContent,
+                people: card.querySelector('.tour-meta span:nth-child(2)').textContent,
+                image: card.querySelector('img').src
+            };
+
+            // Открываем модальное окно с деталями тура
+            openTourModal(tourData);
         });
     });
-});
-// Проверка параметра URL и открытие соответствующего тура
-document.addEventListener('DOMContentLoaded', function() {
+
+    // Проверка параметра URL и открытие соответствующего тура
     const urlParams = new URLSearchParams(window.location.search);
     const tourId = urlParams.get('tour');
     
     if (tourId && toursData[tourId]) {
-        // Показываем модальное окно с выбранным туром
-        const tour = toursData[tourId];
+        openTourModal(toursData[tourId]);
+    }
+
+    // Обработчик кнопки бронирования в модальном окне
+    document.getElementById('bookTourBtn')?.addEventListener('click', function() {
+        if (!isLoggedIn) {
+            alert('Для бронирования тура необходимо войти в систему');
+            window.location.href = 'login.html';
+            return;
+        }
         
-        document.getElementById('modalTourTitle').textContent = tour.title;
-        document.getElementById('modalTourDuration').textContent = tour.duration;
-        document.getElementById('modalTourPeople').textContent = tour.people;
-        document.getElementById('modalTourRating').textContent = tour.rating;
-        document.getElementById('modalTourPrice').textContent = tour.price;
-        document.getElementById('modalTourPricePer').textContent = tour.pricePer;
-        document.getElementById('modalTourDescription').innerHTML = tour.description;
-        
-        // Обновляем галерею изображений
-        const gallery = document.querySelector('.tour-gallery');
-        gallery.innerHTML = '';
-        tour.images.forEach(img => {
-            gallery.innerHTML += `<img src="${img}" alt="${tour.title}">`;
+        try {
+            const modalTitle = document.getElementById('modalTourTitle').textContent;
+            const modalPriceText = document.getElementById('modalTourPrice').textContent;
+            const modalPricePerText = document.getElementById('modalTourPricePer').textContent;
+            const modalDuration = document.getElementById('modalTourDuration').textContent;
+            const modalPeople = document.getElementById('modalTourPeople').textContent;
+
+            // Извлекаем числовые значения цен
+            const modalPrice = parseFloat(modalPriceText.replace(/[^\d.]/g, ''));
+            const modalPricePer = parseFloat(modalPricePerText.split('/')[0].replace(/[^\d.]/g, ''));
+
+            // Создаем объект бронирования
+            const booking = {
+                id: 'TD-' + Math.floor(Math.random() * 1000000),
+                title: modalTitle,
+                price: modalPrice,
+                pricePer: modalPricePer,
+                pricePerText: modalPricePerText,
+                duration: parseInt(modalDuration.replace(/\D/g, '')),
+                people: modalPeople.includes('взрослых') ? 
+                       parseInt(modalPeople.replace(/\D/g, '')) : 
+                       parseInt(modalPeople.replace(/\D/g, '')),
+                date: new Date().toISOString(),
+                status: 'confirmed',
+                image: document.querySelector('.tour-gallery img')?.src || ''
+            };
+
+            // Добавляем бронирование к текущему пользователю
+            addUserBooking(currentUser.email, booking);
+
+            // Переходим на страницу бронирований
+            window.location.href = 'profile-bookings.html';
+        } catch (error) {
+            console.error("Ошибка при бронировании:", error);
+            alert("Произошла ошибка при бронировании. Пожалуйста, попробуйте снова.");
+        }
+    });
+
+    // Обработчики для кнопок "Подробнее"
+    document.querySelectorAll('.btn-details').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tourId = this.getAttribute('data-tour');
+            const tour = toursData[tourId];
+            
+            if (tour) {
+                openTourModal(tour);
+            }
         });
-        
-        // Показываем модальное окно
-        document.getElementById('tourModal').style.display = 'block';
-        
-        // Прокручиваем к модальному окну
-        setTimeout(() => {
-            document.querySelector('.modal-content').scrollIntoView({
-                behavior: 'smooth'
-            });
-        }, 100);
+    });
+
+    // Закрытие модального окна
+    document.querySelector('.close-modal')?.addEventListener('click', function() {
+        document.getElementById('tourModal').style.display = 'none';
+    });
+
+    // Закрытие модального окна при клике вне его
+    window.addEventListener('click', function(e) {
+        if (e.target === document.getElementById('tourModal')) {
+            document.getElementById('tourModal').style.display = 'none';
+        }
+    });
+
+    // Инициализация пагинации
+    if (document.querySelector('.tour-card')) {
+        initPagination();
+    }
+
+    // Сортировка туров
+    const sortSelect = document.getElementById('sort');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            sortTours(this.value);
+        });
     }
 });
 
@@ -297,209 +361,117 @@ const toursData = {
     }
 };
 
-// Обработчик кнопки бронирования в модальном окне
-document.getElementById('bookTourBtn')?.addEventListener('click', function() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    
-    if (!isLoggedIn) {
-        alert('Для бронирования тура необходимо войти в систему');
-        window.location.href = 'login.html';
-        return;
-    }
-    
+// Функция для добавления бронирования пользователю
+function addUserBooking(email, booking) {
     try {
-        const modalTitle = document.getElementById('modalTourTitle').textContent;
-        const modalPriceText = document.getElementById('modalTourPrice').textContent;
-        const modalPricePerText = document.getElementById('modalTourPricePer').textContent;
-        const modalDuration = document.getElementById('modalTourDuration').textContent;
-        const modalPeople = document.getElementById('modalTourPeople').textContent;
-
-        // Извлекаем числовые значения цен
-        const modalPrice = parseFloat(modalPriceText.replace(/[^\d.]/g, ''));
-        const modalPricePer = parseFloat(modalPricePerText.split('/')[0].replace(/[^\d.]/g, ''));
-
-        // Создаем объект бронирования
-        const booking = {
-            id: 'TD-' + Math.floor(Math.random() * 1000000),
-            title: modalTitle,
-            price: modalPrice,
-            pricePer: modalPricePer,
-            pricePerText: modalPricePerText,
-            duration: parseInt(modalDuration.replace(/\D/g, '')),
-            people: modalPeople.includes('взрослых') ? 
-                   parseInt(modalPeople.replace(/\D/g, '')) : 
-                   parseInt(modalPeople.replace(/\D/g, '')),
-            date: new Date().toLocaleDateString('ru-RU'),
-            status: 'confirmed',
-            image: document.querySelector('.tour-gallery img')?.src || ''
-        };
-
-        // Получаем текущие бронирования из localStorage с обработкой ошибок
-        let bookings = [];
-        try {
-            const bookingsData = localStorage.getItem('bookings');
-            if (bookingsData && bookingsData !== "undefined") {
-                bookings = JSON.parse(bookingsData) || [];
-            }
-        } catch (e) {
-            console.error("Ошибка при чтении бронирований:", e);
+        // Получаем текущие бронирования из localStorage
+        let bookings = JSON.parse(localStorage.getItem('bookings')) || {};
+        
+        // Если для этого пользователя еще нет бронирований, создаем массив
+        if (!bookings[email]) {
+            bookings[email] = [];
         }
-
+        
         // Добавляем новое бронирование
-        bookings.push(booking);
-
-        // Сохраняем обратно в localStorage
+        bookings[email].push(booking);
+        
+        // Сохраняем обновленный список
         localStorage.setItem('bookings', JSON.stringify(bookings));
-
-        // Переходим на страницу бронирований
-        window.location.href = 'profile-bookings.html';
-    } catch (error) {
-        console.error("Ошибка при бронировании:", error);
-        alert("Произошла ошибка при бронировании. Пожалуйста, попробуйте снова.");
-    }
-});
-
-// Функция для загрузки бронирований на странице profile-bookings.html
-function loadBookings() {
-    try {
-        // Безопасное чтение из localStorage
-        const bookingsData = localStorage.getItem('bookings');
-        let bookings = [];
         
-        if (bookingsData && bookingsData !== "undefined") {
-            bookings = JSON.parse(bookingsData) || [];
-        }
-
-        const currentTab = document.getElementById('current');
-        
-        if (bookings.length === 0) {
-            currentTab.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-suitcase"></i>
-                    <h3>Нет текущих бронирований</h3>
-                    <p>Здесь будут отображаться ваши активные бронирования</p>
-                    <a href="tours.html" class="btn">Найти тур</a>
-                </div>
-            `;
-        } else {
-            currentTab.innerHTML = bookings.map(booking => `
-                <div class="booking-card" data-id="${booking.id}">
-                    <!-- Ваш HTML для отображения бронирования -->
-                </div>
-            `).join('');
-        }
+        return true;
     } catch (error) {
-        console.error("Ошибка при загрузке бронирований:", error);
-        document.getElementById('current').innerHTML = `
-            <div class="error-state">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h3>Ошибка загрузки бронирований</h3>
-                <p>Пожалуйста, попробуйте перезагрузить страницу</p>
-            </div>
-        `;
+        console.error('Ошибка при добавлении бронирования:', error);
+        return false;
     }
 }
 
-// Обработчики для кнопок "Подробнее"
-document.querySelectorAll('.btn-details').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const tourId = this.getAttribute('data-tour');
-        const tour = toursData[tourId];
-        
-        if (tour) {
-            document.getElementById('modalTourTitle').textContent = tour.title;
-            document.getElementById('modalTourDuration').textContent = tour.duration;
-            document.getElementById('modalTourPeople').textContent = tour.people;
-            document.getElementById('modalTourRating').textContent = tour.rating;
-            document.getElementById('modalTourPrice').textContent = tour.price;
-            document.getElementById('modalTourPricePer').textContent = tour.pricePer;
-            document.getElementById('modalTourDescription').innerHTML = tour.description;
-            
-            // Обновляем галерею изображений
-            const gallery = document.querySelector('.tour-gallery');
-            gallery.innerHTML = '';
-            tour.images.forEach(img => {
-                gallery.innerHTML += `<img src="${img}" alt="${tour.title}">`;
-            });
-            
-            // Показываем модальное окно
-            document.getElementById('tourModal').style.display = 'block';
-        }
+// Функция для открытия модального окна с туром
+function openTourModal(tour) {
+    document.getElementById('modalTourTitle').textContent = tour.title;
+    document.getElementById('modalTourDuration').textContent = tour.duration;
+    document.getElementById('modalTourPeople').textContent = tour.people;
+    document.getElementById('modalTourRating').textContent = tour.rating || '4.5';
+    document.getElementById('modalTourPrice').textContent = tour.price;
+    document.getElementById('modalTourPricePer').textContent = tour.pricePer || `${tour.price} /чел`;
+    document.getElementById('modalTourDescription').innerHTML = tour.description || 'Описание тура';
+    
+    // Обновляем галерею изображений
+    const gallery = document.querySelector('.tour-gallery');
+    gallery.innerHTML = '';
+    const images = tour.images || [tour.image || 'default-tour.jpg'];
+    images.forEach(img => {
+        gallery.innerHTML += `<img src="${img}" alt="${tour.title}">`;
     });
-});
+    
+    // Показываем модальное окно
+    document.getElementById('tourModal').style.display = 'block';
+    
+    // Прокручиваем к модальному окну
+    setTimeout(() => {
+        document.querySelector('.modal-content').scrollIntoView({
+            behavior: 'smooth'
+        });
+    }, 100);
+}
 
-// Закрытие модального окна
-document.querySelector('.close-modal').addEventListener('click', function() {
-    document.getElementById('tourModal').style.display = 'none';
-});
+// Функция для инициализации пагинации
+function initPagination() {
+    const toursPerPage = 6;
+    let currentPage = 1;
+    const tourCards = Array.from(document.querySelectorAll('.tour-card'));
+    const totalPages = Math.ceil(tourCards.length / toursPerPage);
 
-// Закрытие модального окна при клике вне его
-window.addEventListener('click', function(e) {
-    if (e.target === document.getElementById('tourModal')) {
-        document.getElementById('tourModal').style.display = 'none';
+    function updatePagination() {
+        // Обновляем активную страницу
+        document.querySelectorAll('.page-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.dataset.page == currentPage) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Показываем/скрываем кнопки "назад" и "вперед"
+        const prevBtn = document.getElementById('prevPage');
+        const nextBtn = document.getElementById('nextPage');
+        if (prevBtn) prevBtn.style.visibility = currentPage === 1 ? 'hidden' : 'visible';
+        if (nextBtn) nextBtn.style.visibility = currentPage === totalPages ? 'hidden' : 'visible';
+        
+        // Показываем только туры для текущей страницы
+        tourCards.forEach((card, index) => {
+            const startIndex = (currentPage - 1) * toursPerPage;
+            const endIndex = startIndex + toursPerPage;
+            
+            card.style.display = (index >= startIndex && index < endIndex) ? 'block' : 'none';
+        });
     }
-});
 
-// Пагинация
-const toursPerPage = 6;
-let currentPage = 1;
-const tourCards = Array.from(document.querySelectorAll('.tour-card'));
-const totalPages = Math.ceil(tourCards.length / toursPerPage);
-
-function updatePagination() {
-    // Обновляем активную страницу
+    // Обработчики для кнопок пагинации
     document.querySelectorAll('.page-link').forEach(link => {
-        link.classList.remove('active');
-        if (link.dataset.page == currentPage) {
-            link.classList.add('active');
-        }
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (this.classList.contains('prev')) {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                }
+            } else if (this.classList.contains('next')) {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                }
+            } else if (this.dataset.page) {
+                currentPage = parseInt(this.dataset.page);
+                updatePagination();
+            }
+        });
     });
-    
-    // Показываем/скрываем кнопки "назад" и "вперед"
-    document.getElementById('prevPage').style.visibility = currentPage === 1 ? 'hidden' : 'visible';
-    document.getElementById('nextPage').style.visibility = currentPage === totalPages ? 'hidden' : 'visible';
-    
-    // Показываем только туры для текущей страницы
-    tourCards.forEach((card, index) => {
-        const startIndex = (currentPage - 1) * toursPerPage;
-        const endIndex = startIndex + toursPerPage;
-        
-        if (index >= startIndex && index < endIndex) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
+
+    updatePagination();
 }
 
-// Обработчики для кнопок пагинации
-document.querySelectorAll('.page-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        if (this.classList.contains('prev')) {
-            if (currentPage > 1) {
-                currentPage--;
-                updatePagination();
-            }
-        } else if (this.classList.contains('next')) {
-            if (currentPage < totalPages) {
-                currentPage++;
-                updatePagination();
-            }
-        } else if (this.dataset.page) {
-            currentPage = parseInt(this.dataset.page);
-            updatePagination();
-        }
-    });
-});
-
-// Инициализация пагинации
-updatePagination();
-
-// Сортировка туров
-document.getElementById('sort').addEventListener('change', function() {
-    const sortValue = this.value;
+// Функция для сортировки туров
+function sortTours(sortValue) {
     const toursContainer = document.getElementById('toursContainer');
     const tourCards = Array.from(document.querySelectorAll('.tour-card'));
     
@@ -529,44 +501,31 @@ document.getElementById('sort').addEventListener('change', function() {
     tourCards.forEach(card => toursContainer.appendChild(card));
     
     // Возвращаемся на первую страницу после сортировки
-    currentPage = 1;
-    updatePagination();
-});
-// Проверяем статус авторизации
-document.addEventListener('DOMContentLoaded', function() {
-    // Мобильное меню
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const navMenu = document.getElementById('navMenu');
-    
-    mobileMenuBtn.addEventListener('click', function() {
-        navMenu.classList.toggle('show');
-    });
-    
-    // Авторизация
+    const currentPage = 1;
+    initPagination();
+}
+
+// Функция для обновления UI авторизации
+function updateAuthUI(isLoggedIn, userName) {
     const authButtons = document.getElementById('authButtons');
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const username = localStorage.getItem('username') || 'Профиль';
-    
+    if (!authButtons) return;
+
     if (isLoggedIn) {
-        // Если пользователь вошел, показываем кнопку профиля
         authButtons.innerHTML = `
             <a href="profile.html" class="btn-profile">
                 <i class="fas fa-user"></i>
-                ${username}
+                ${userName || 'Профиль'}
             </a>
             <button class="btn-logout" id="logoutBtn">
                 <i class="fas fa-sign-out-alt"></i> Выход
             </button>
         `;
         
-        // Обработчик выхода
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('username');
+        document.getElementById('logoutBtn')?.addEventListener('click', function() {
+            localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         });
     } else {
-        // Если не вошел, показываем кнопки входа и регистрации
         authButtons.innerHTML = `
             <button class="btn-login" id="loginBtn">
                 <i class="fas fa-sign-in-alt"></i> Вход
@@ -576,13 +535,22 @@ document.addEventListener('DOMContentLoaded', function() {
             </button>
         `;
         
-        // Обработчики кнопок
-        document.getElementById('loginBtn').addEventListener('click', function() {
+        document.getElementById('loginBtn')?.addEventListener('click', function() {
             window.location.href = 'login.html';
         });
         
-        document.getElementById('registerBtn').addEventListener('click', function() {
+        document.getElementById('registerBtn')?.addEventListener('click', function() {
             window.location.href = 'register.html';
         });
     }
-});
+}
+
+// Мобильное меню
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const navMenu = document.getElementById('navMenu');
+
+if (mobileMenuBtn && navMenu) {
+    mobileMenuBtn.addEventListener('click', function() {
+        navMenu.classList.toggle('show');
+    });
+}

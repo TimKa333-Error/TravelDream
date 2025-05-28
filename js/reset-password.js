@@ -1,80 +1,50 @@
-// reset-password.js
-
+// new-password.js
 document.addEventListener('DOMContentLoaded', function() {
-    const resetForm = document.getElementById('resetPasswordForm');
-    const successMessage = document.querySelector('.success-message');
-    const emailInput = document.getElementById('email');
+    const newPasswordForm = document.getElementById('newPasswordForm');
+    const token = new URLSearchParams(window.location.search).get('token');
+    const email = new URLSearchParams(window.location.search).get('email');
 
-    if (resetForm) {
-        resetForm.addEventListener('submit', function(e) {
+    if (!token || !email) {
+        window.location.href = 'reset-password.html';
+        return;
+    }
+
+    // Проверяем токен
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const user = users[email];
+
+    if (!user || user.resetToken !== token || user.resetTokenExpires < Date.now()) {
+        alert('Ссылка для сброса пароля недействительна или истекла');
+        window.location.href = 'reset-password.html';
+        return;
+    }
+
+    if (newPasswordForm) {
+        newPasswordForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Проверка валидности email
-            if (!emailInput.value || !isValidEmail(emailInput.value)) {
-                showError(emailInput, 'Пожалуйста, введите корректный email');
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword.length < 8) {
+                alert('Пароль должен содержать не менее 8 символов');
                 return;
             }
 
-            // Показываем сообщение об успехе
-            successMessage.style.display = 'block';
-            successMessage.innerHTML = `
-                <i class="fas fa-check-circle"></i> 
-                Ссылка для сброса пароля отправлена на ${emailInput.value}
-            `;
-            
-            // Скрываем форму
-            resetForm.style.display = 'none';
-            
-            // Через 1 секунду перенаправляем на страницу входа
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 1000);
-            
-        });
-    }
-
-    // Валидация email при вводе
-    if (emailInput) {
-        emailInput.addEventListener('input', function() {
-            if (this.value && !isValidEmail(this.value)) {
-                showError(this, 'Введите корректный email');
-            } else {
-                clearError(this);
+            if (newPassword !== confirmPassword) {
+                alert('Пароли не совпадают');
+                return;
             }
+
+            // Обновляем пароль
+            user.password = newPassword;
+            delete user.resetToken;
+            delete user.resetTokenExpires;
+            users[email] = user;
+            localStorage.setItem('users', JSON.stringify(users));
+
+            alert('Пароль успешно изменен! Теперь вы можете войти с новым паролем.');
+            window.location.href = 'login.html';
         });
-    }
-
-    // Функция проверки email
-    function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    // Показать ошибку
-    function showError(input, message) {
-        clearError(input);
-        const error = document.createElement('div');
-        error.className = 'error-message';
-        error.textContent = message;
-        error.style.color = '#e74c3c';
-        error.style.fontSize = '0.8rem';
-        error.style.marginTop = '5px';
-        input.parentNode.appendChild(error);
-        input.style.borderColor = '#e74c3c';
-    }
-
-    // Убрать ошибку
-    function clearError(input) {
-        const error = input.parentNode.querySelector('.error-message');
-        if (error) {
-            input.parentNode.removeChild(error);
-        }
-        input.style.borderColor = '#ddd';
-    }
-
-    // Функция для отправки запроса 
-    function sendResetRequest(email) {
-        // В реальном приложении здесь был бы fetch-запрос к серверу
-        console.log('Запрос на сброс пароля отправлен для:', email);
-        return new Promise(resolve => setTimeout(resolve, 1000));
     }
 });

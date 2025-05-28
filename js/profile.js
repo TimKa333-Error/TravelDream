@@ -29,7 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadProfileData() {
         // Получаем данные из localStorage
-        const userData = JSON.parse(localStorage.getItem('userData'));
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const users = JSON.parse(localStorage.getItem('users')) || {};
+        const userData = users[currentUser.email];
         
         if (!userData) {
             // Если данных нет - перенаправляем на регистрацию
@@ -38,8 +40,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Заполняем поля формы
-        document.getElementById('firstName').value = userData.firstName;
-        document.getElementById('lastName').value = userData.lastName;
+        document.getElementById('firstName').value = userData.firstName || '';
+        document.getElementById('lastName').value = userData.lastName || '';
+        document.getElementById('middleName').value = userData.middleName || '';
         document.getElementById('email').value = userData.email;
         document.getElementById('phone').value = userData.phone;
         document.getElementById('birthday').value = userData.birthday || '';

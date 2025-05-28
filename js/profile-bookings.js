@@ -1,5 +1,5 @@
 const App = {
-    bookings: [],
+    bookings: {},
     currentBooking: null,
     
     init: function() {
@@ -17,13 +17,17 @@ const App = {
     },
 
     loadProfile: function() {
-        // Получаем данные из единого источника (userData)
-        const userData = JSON.parse(localStorage.getItem('userData'));
+        // Получаем текущего пользователя из localStorage
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         
-        if (!userData) {
+        if (!currentUser || !currentUser.email) {
             window.location.href = 'login.html';
             return;
         }
+        
+        // Получаем всех пользователей из localStorage
+        const users = JSON.parse(localStorage.getItem('users') || {});
+        const userData = users[currentUser.email] || currentUser;
         
         const savedAvatar = localStorage.getItem('profileAvatar') || 
                           userData.avatar || 
@@ -43,37 +47,57 @@ const App = {
             localStorage.setItem('profileAvatar', this.src);
             
             // Обновляем в userData
-            const userData = JSON.parse(localStorage.getItem('userData')) || {};
-            userData.avatar = this.src;
-            localStorage.setItem('userData', JSON.stringify(userData));
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (users[currentUser.email]) {
+                users[currentUser.email].avatar = this.src;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
         };
     },
 
     markLastBookingAsPaid: function() {
-        const lastUnpaidBooking = this.bookings.find(b => b.status === 'confirmed');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || !currentUser.email) return;
+        
+        const userBookings = this.bookings[currentUser.email] || [];
+        const lastUnpaidBooking = userBookings.find(b => b.status === 'confirmed');
         if (lastUnpaidBooking) {
             lastUnpaidBooking.status = 'completed';
+            this.bookings[currentUser.email] = userBookings;
             localStorage.setItem('bookings', JSON.stringify(this.bookings));
             this.loadBookings('current');
         }
     },
     
     loadBookingsFromStorage: function() {
-        let storedBookings = localStorage.getItem('bookings');
-        
-        if (!storedBookings || storedBookings === "undefined") {
-           
-            this.bookings = [];
-            return;
-        }
-        
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.email) return;
+    
+    // Инициализируем bookings как объект
+    this.bookings = {};
+    
+    // Получаем данные из localStorage
+    const storedBookings = localStorage.getItem('bookings');
+    
+    // Если есть данные, пытаемся их распарсить
+    if (storedBookings && storedBookings !== "undefined") {
         try {
-            this.bookings = JSON.parse(storedBookings) || [];
+            this.bookings = JSON.parse(storedBookings) || {};
         } catch (e) {
             console.error("Ошибка при разборе данных бронирований:", e);
-            this.bookings = [];
+            this.bookings = {};
         }
-    },
+    }
+    
+    // Гарантируем, что для текущего пользователя есть массив бронирований
+    if (!this.bookings[currentUser.email]) {
+        this.bookings[currentUser.email] = [];
+    }
+    
+    // Сохраняем обратно на случай, если мы инициализировали новый массив
+    localStorage.setItem('bookings', JSON.stringify(this.bookings));
+},
     
     setupEventListeners: function() {
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -132,7 +156,12 @@ const App = {
     },
     
     loadBookings: function(tab) {
-        const filteredBookings = this.bookings.filter(b => {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || !currentUser.email) return;
+        
+        const userBookings = this.bookings[currentUser.email] || [];
+        
+        const filteredBookings = userBookings.filter(b => {
             if (!b || !b.status) return false;
             if (tab === 'current') return b.status === 'confirmed';
             if (tab === 'completed') return b.status === 'completed';
@@ -157,7 +186,6 @@ const App = {
         
         const price = booking.price || 0;
         const people = booking.people || 1;
-        // Используем сохраненную текстовую цену за человека, если она есть
         const pricePerText = booking.pricePerText || `${Math.round(price / people)} $/чел`;
         const hotel = booking.hotel || 'Отель не указан';
         const image = booking.image || 'https://via.placeholder.com/150';
@@ -226,16 +254,18 @@ const App = {
         `;
     },
 
-    // Метод для удаления отмененных туров
     deleteCancelledBooking: function(e) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || !currentUser.email) return;
+        
         const bookingId = e.target.closest('.booking-card').dataset.id;
         if (confirm('Вы уверены, что хотите удалить этот отмененный тур? Действие нельзя отменить.')) {
-            this.bookings = this.bookings.filter(b => b.id !== bookingId);
+            this.bookings[currentUser.email] = this.bookings[currentUser.email].filter(b => b.id !== bookingId);
             localStorage.setItem('bookings', JSON.stringify(this.bookings));
             this.loadBookings('cancelled');
         }
     },
-    // Функция для склонения "дней"
+    
     getDaysText: function(days) {
         days = days || 0;
         const lastDigit = days % 10;
@@ -247,11 +277,13 @@ const App = {
         return 'дней';
     },
 
-    // Метод для удаления оплаченных туров
     deleteCompletedBooking: function(e) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || !currentUser.email) return;
+        
         const bookingId = e.target.closest('.booking-card').dataset.id;
         if (confirm('Вы уверены, что хотите удалить этот оплаченный тур? Действие нельзя отменить.')) {
-            this.bookings = this.bookings.filter(b => b.id !== bookingId);
+            this.bookings[currentUser.email] = this.bookings[currentUser.email].filter(b => b.id !== bookingId);
             localStorage.setItem('bookings', JSON.stringify(this.bookings));
             this.loadBookings('completed');
         }
@@ -309,14 +341,16 @@ const App = {
     },
     
     showBookingDetails: function(e) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || !currentUser.email) return;
+        
         const bookingId = e.target.closest('.booking-card').dataset.id;
-        const booking = this.bookings.find(b => b.id === bookingId);
+        const booking = (this.bookings[currentUser.email] || []).find(b => b.id === bookingId);
         
         if (!booking) return;
         
         const price = booking.price || 0;
         const people = booking.people || 1;
-        // Используем сохраненную текстовую цену за человека
         const pricePerText = booking.pricePerText || `${Math.round(price / people)} $/чел`;
         const hotel = booking.hotel || 'Не указан';
         const image = booking.image || 'https://via.placeholder.com/600x400';
@@ -359,9 +393,10 @@ const App = {
     },
     
     cancelBooking: function() {
-        if (!this.currentBooking) return;
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || !currentUser.email || !this.currentBooking) return;
         
-        this.bookings = this.bookings.map(b => 
+        this.bookings[currentUser.email] = this.bookings[currentUser.email].map(b => 
             b.id === this.currentBooking ? {...b, status: 'cancelled'} : b
         );
         
@@ -373,58 +408,70 @@ const App = {
         this.currentBooking = null;
     },
     
-    deleteBooking: function(e) {
-        const bookingId = e.target.closest('.booking-card').dataset.id;
-        if (confirm('Вы уверены, что хотите удалить это бронирование? Это действие нельзя отменить.')) {
-            this.bookings = this.bookings.filter(b => b.id !== bookingId);
-            localStorage.setItem('bookings', JSON.stringify(this.bookings));
-            this.loadBookings('cancelled');
-        }
-    },
-    
     processPayment: function(e) {
-        const bookingId = e.target.closest('.booking-card').dataset.id;
-        const booking = this.bookings.find(b => b.id === bookingId);
-        
-        if (!booking) return;
-        
-        // Загружаем баланс из localStorage
-        const balance = parseFloat(localStorage.getItem('userBalance') || 0);
-        const price = booking.price || 0;
-        
-        if (balance < price) {
-            if (confirm('Недостаточно средств на балансе. Хотите пополнить баланс?')) {
-                // Сохраняем ID бронирования для возврата
-                localStorage.setItem('pendingBooking', bookingId);
-                window.location.href = 'balance.html?return=bookings';
-            }
-            return;
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.email) return;
+    
+    const bookingId = e.target.closest('.booking-card').dataset.id;
+    const booking = (this.bookings[currentUser.email] || []).find(b => b.id === bookingId);
+    
+    if (!booking) return;
+    
+    // Загружаем баланс из localStorage
+    const users = JSON.parse(localStorage.getItem('users')) || {};
+    const userData = users[currentUser.email] || {};
+    const balance = parseFloat(userData.balance || 0);
+    const price = booking.price || 0;
+    
+    if (balance < price) {
+        if (confirm('Недостаточно средств на балансе. Хотите пополнить баланс?')) {
+            // Сохраняем ID бронирования для возврата
+            localStorage.setItem('pendingBooking', bookingId);
+            window.location.href = 'balance.html?return=bookings';
         }
-        
-        // Списываем средства
-        const newBalance = balance - price;
-        localStorage.setItem('userBalance', newBalance.toString());
-        
-        // Обновляем статус бронирования
-        booking.status = 'completed';
-        localStorage.setItem('bookings', JSON.stringify(this.bookings));
-        
-        // Добавляем транзакцию в историю
-        const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-        transactions.unshift({
+        return;
+    }
+    
+    // Списываем средства
+    const newBalance = balance - price;
+    userData.balance = newBalance;
+    users[currentUser.email] = userData;
+    localStorage.setItem('users', JSON.stringify(users));
+    
+    // Обновляем статус бронирования
+    booking.status = 'completed';
+    this.bookings[currentUser.email] = this.bookings[currentUser.email].map(b => 
+        b.id === bookingId ? booking : b
+    );
+    localStorage.setItem('bookings', JSON.stringify(this.bookings));
+    
+    // Добавляем транзакцию в историю
+    const transactionsStr = localStorage.getItem('transactions');
+    let transactions = {};
+    try {
+        transactions = transactionsStr ? JSON.parse(transactionsStr) : {};
+    } catch (e) {
+        console.error("Ошибка при парсинге транзакций:", e);
+        transactions = {};
+    }
+    
+    if (!transactions[currentUser.email]) {
+        transactions[currentUser.email] = [];
+    }
+    transactions[currentUser.email].unshift({
         id: Date.now(),
         type: 'Оплата тура: ' + booking.title,
         amount: -price,
         date: new Date().toLocaleDateString('ru-RU'),
         method: 'Списание с баланса',
         icon: 'fa-plane'
-        });
-        localStorage.setItem('transactions', JSON.stringify(transactions));
-        
-        // Обновляем отображение
-        this.loadBookings('current');
-        alert('Оплата прошла успешно! Спасибо за покупку.');
-    },
+    });
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+    
+    // Обновляем отображение
+    this.loadBookings('current');
+    alert('Оплата прошла успешно! Спасибо за покупку.');
+},
     
     openModal: function(modalId) {
         document.getElementById(modalId).style.display = 'flex';
@@ -453,17 +500,13 @@ const App = {
     },
     
     formatCurrency: function(amount) {
-        // Проверяем, что amount - число
         amount = parseFloat(amount);
         if (isNaN(amount)) {
             amount = 0;
         }
-        // Округляем до целых
         amount = Math.round(amount);
-        // Форматируем с разделителями тысяч
         return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + ' $';
     }
-    
 };
 
 document.addEventListener('DOMContentLoaded', function() {

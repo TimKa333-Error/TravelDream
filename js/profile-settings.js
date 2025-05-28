@@ -1,7 +1,15 @@
 // Функция загрузки данных профиля из localStorage 
 function loadProfileData() {
-    // Загружаем данные из userData
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    // Получаем текущего пользователя из localStorage
+    const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
+    if (!currentUserEmail) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Загружаем данные всех пользователей
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const userData = users[currentUserEmail];
     
     if (!userData) {
         window.location.href = 'login.html';
@@ -24,9 +32,18 @@ function loadProfileData() {
         localStorage.setItem('profileAvatar', this.src);
         
         // Обновляем в userData
-        const userData = JSON.parse(localStorage.getItem('userData')) || {};
-        userData.avatar = this.src;
-        localStorage.setItem('userData', JSON.stringify(userData));
+        const users = JSON.parse(localStorage.getItem('users') || {});
+        if (users[currentUserEmail]) {
+            users[currentUserEmail].avatar = this.src;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Обновляем currentUser если это текущий пользователь
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.email === currentUserEmail) {
+                currentUser.avatar = this.src;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+        }
     };
     
     // Заполняем форму изменения имени
@@ -42,17 +59,33 @@ if (nameForm) {
         
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
+        const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
         
         if (!firstName || !lastName) {
             alert('Пожалуйста, заполните все поля');
             return;
         }
         
-        // Обновляем данные в userData
-        const userData = JSON.parse(localStorage.getItem('userData')) || {};
-        userData.firstName = firstName;
-        userData.lastName = lastName;
-        localStorage.setItem('userData', JSON.stringify(userData));
+        if (!currentUserEmail) {
+            alert('Ошибка: пользователь не авторизован');
+            return;
+        }
+        
+        // Обновляем данные в хранилище
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (users[currentUserEmail]) {
+            users[currentUserEmail].firstName = firstName;
+            users[currentUserEmail].lastName = lastName;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Обновляем currentUser если это текущий пользователь
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.email === currentUserEmail) {
+                currentUser.firstName = firstName;
+                currentUser.lastName = lastName;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+        }
         
         // Обновляем отображение
         document.getElementById('profileName').textContent = `${firstName} ${lastName}`;
@@ -68,11 +101,23 @@ const deleteAccountBtn = document.getElementById('deleteAccountBtn');
 if (deleteAccountBtn) {
     deleteAccountBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
+        
+        if (!currentUserEmail) {
+            alert('Ошибка: пользователь не авторизован');
+            return;
+        }
+        
         if (confirm('Вы уверены, что хотите удалить свой аккаунт? Это действие нельзя отменить. Все ваши данные будут безвозвратно удалены.')) {
-            // Очищаем все связанные данные
-            localStorage.removeItem('userData');
-            localStorage.removeItem('profileAvatar');
+            // Удаляем пользователя из хранилища
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            delete users[currentUserEmail];
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Очищаем другие данные
+            localStorage.removeItem('currentUser');
             localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('profileAvatar');
             localStorage.removeItem('bookings');
             localStorage.removeItem('userBalance');
             localStorage.removeItem('transactions');
@@ -133,9 +178,21 @@ if (passwordForm) {
         const currentPassword = document.getElementById('currentPassword').value;
         const newPassword = document.getElementById('newPassword').value;
         const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+        const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
         
-        // В реальном приложении здесь должна быть проверка текущего пароля
-        const userData = JSON.parse(localStorage.getItem('userData')) || {};
+        if (!currentUserEmail) {
+            alert('Ошибка: пользователь не авторизован');
+            return;
+        }
+        
+        // Получаем данные пользователя
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        const userData = users[currentUserEmail];
+        
+        if (!userData) {
+            alert('Ошибка: данные пользователя не найдены');
+            return;
+        }
         
         if (userData.password !== currentPassword) {
             alert('Текущий пароль неверен');
@@ -152,9 +209,16 @@ if (passwordForm) {
             return;
         }
         
-        // Обновляем пароль в userData
-        userData.password = newPassword;
-        localStorage.setItem('userData', JSON.stringify(userData));
+        // Обновляем пароль в хранилище
+        users[currentUserEmail].password = newPassword;
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Обновляем currentUser если это текущий пользователь
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser && currentUser.email === currentUserEmail) {
+            currentUser.password = newPassword;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
         
         alert('Пароль успешно изменен');
         passwordModal.style.display = 'none';
@@ -169,10 +233,22 @@ const smsNotifications = document.getElementById('smsNotifications');
 
 if (twoFactorToggle) {
     twoFactorToggle.addEventListener('change', function() {
-        // Сохраняем настройку в userData
-        const userData = JSON.parse(localStorage.getItem('userData')) || {};
-        userData.twoFactorEnabled = this.checked;
-        localStorage.setItem('userData', JSON.stringify(userData));
+        const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
+        if (!currentUserEmail) return;
+        
+        // Сохраняем настройку в хранилище
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (users[currentUserEmail]) {
+            users[currentUserEmail].twoFactorEnabled = this.checked;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Обновляем currentUser если это текущий пользователь
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.email === currentUserEmail) {
+                currentUser.twoFactorEnabled = this.checked;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+        }
         
         alert(this.checked ? 
             'Двухфакторная аутентификация включена' : 
@@ -182,17 +258,39 @@ if (twoFactorToggle) {
 
 if (emailNotifications) {
     emailNotifications.addEventListener('change', function() {
-        const userData = JSON.parse(localStorage.getItem('userData')) || {};
-        userData.emailNotifications = this.checked;
-        localStorage.setItem('userData', JSON.stringify(userData));
+        const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
+        if (!currentUserEmail) return;
+        
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (users[currentUserEmail]) {
+            users[currentUserEmail].emailNotifications = this.checked;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.email === currentUserEmail) {
+                currentUser.emailNotifications = this.checked;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+        }
     });
 }
 
 if (smsNotifications) {
     smsNotifications.addEventListener('change', function() {
-        const userData = JSON.parse(localStorage.getItem('userData')) || {};
-        userData.smsNotifications = this.checked;
-        localStorage.setItem('userData', JSON.stringify(userData));
+        const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
+        if (!currentUserEmail) return;
+        
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        if (users[currentUserEmail]) {
+            users[currentUserEmail].smsNotifications = this.checked;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.email === currentUserEmail) {
+                currentUser.smsNotifications = this.checked;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+        }
     });
 }
 
@@ -201,7 +299,12 @@ document.addEventListener('DOMContentLoaded', function() {
     loadProfileData();
     
     // Загружаем сохраненные настройки
-    const userData = JSON.parse(localStorage.getItem('userData')) || {};
+    const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
+    if (!currentUserEmail) return;
+    
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const userData = users[currentUserEmail] || {};
+    
     if (twoFactorToggle) twoFactorToggle.checked = userData.twoFactorEnabled || false;
     if (emailNotifications) emailNotifications.checked = userData.emailNotifications !== false;
     if (smsNotifications) smsNotifications.checked = userData.smsNotifications || false;

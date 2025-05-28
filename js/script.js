@@ -62,8 +62,25 @@ document.querySelectorAll('.page-link').forEach(link => {
 // Сохранение данных профиля
 function saveProfileData(data) {
     try {
-        localStorage.setItem('profileData', JSON.stringify(data));
-        return true;
+        const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
+        if (!currentUserEmail) return false;
+
+        const users = JSON.parse(localStorage.getItem('users') || {});
+        if (users[currentUserEmail]) {
+            users[currentUserEmail] = {...users[currentUserEmail], ...data};
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Обновляем currentUser если это текущий пользователь
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.email === currentUserEmail) {
+                localStorage.setItem('currentUser', JSON.stringify({
+                    ...currentUser,
+                    ...data
+                }));
+            }
+            return true;
+        }
+        return false;
     } catch (e) {
         console.error('Ошибка сохранения профиля:', e);
         return false;
@@ -74,18 +91,23 @@ function saveProfileData(data) {
 function loadProfileData() {
     const defaultData = {
         firstName: 'Иван',
-        lastName: 'Петrov',
-        email: 'ivan.petrov@example.com',
-        phone: '+7 (123) 456-78-90',
-        birthday: '1990-05-15',
-        country: 'Россия',
-        city: 'Москва',
+        lastName: 'Петров',
+        email: '',
+        phone: '',
+        birthday: '',
+        country: '',
+        city: '',
         avatar: 'https://randomuser.me/api/portraits/men/32.jpg'
     };
 
     try {
-        const savedData = JSON.parse(localStorage.getItem('profileData')) || {};
-        return {...defaultData, ...savedData};
+        const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
+        if (!currentUserEmail) return defaultData;
+
+        const users = JSON.parse(localStorage.getItem('users') || {});
+        const userData = users[currentUserEmail] || {};
+        
+        return {...defaultData, ...userData};
     } catch (e) {
         console.error('Ошибка загрузки профиля:', e);
         return defaultData;
@@ -274,11 +296,56 @@ function setupAvatarModal() {
 
 // Проверка, забронирован ли тур
 function isTourBooked(tourId) {
-    const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-    return bookings.some(booking => 
+    const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
+    if (!currentUserEmail) return false;
+
+    const users = JSON.parse(localStorage.getItem('users') || {});
+    const userBookings = users[currentUserEmail]?.bookings || [];
+    
+    return userBookings.some(booking => 
         booking.tourId === tourId && 
         booking.status !== 'cancelled'
     );
+}
+
+// Добавление бронирования
+function addBooking(tourData) {
+    const currentUserEmail = JSON.parse(localStorage.getItem('currentUser'))?.email;
+    if (!currentUserEmail) return false;
+
+    try {
+        const users = JSON.parse(localStorage.getItem('users') || {});
+        if (!users[currentUserEmail]) return false;
+
+        const booking = {
+            tourId: tourData.id,
+            title: tourData.title,
+            date: new Date().toISOString(),
+            status: 'confirmed',
+            price: tourData.price,
+            image: tourData.image
+        };
+
+        if (!users[currentUserEmail].bookings) {
+            users[currentUserEmail].bookings = [];
+        }
+
+        users[currentUserEmail].bookings.push(booking);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Обновляем currentUser если это текущий пользователь
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser && currentUser.email === currentUserEmail) {
+            if (!currentUser.bookings) currentUser.bookings = [];
+            currentUser.bookings.push(booking);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+
+        return true;
+    } catch (e) {
+        console.error('Ошибка при бронировании:', e);
+        return false;
+    }
 }
 
 // Обновление отображения туров
@@ -329,8 +396,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('profileEmail')) {
         document.getElementById('profileEmail').textContent = profileData.email;
     }
+
     // Мобильное меню
-document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mainNav = document.getElementById('mainNav');
     
@@ -389,7 +456,8 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(tapTimer);
             if (this.classList.contains('tap-effect')) {
                 this.classList.remove('tap-effect');
-                window.location.href = this.querySelector('a').href;
+                const link = this.querySelector('a');
+                if (link) window.location.href = link.href;
             }
         });
         
@@ -418,4 +486,3 @@ tapEffectStyle.textContent = `
     }
 `;
 document.head.appendChild(tapEffectStyle);
-});

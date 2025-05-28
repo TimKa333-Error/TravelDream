@@ -325,6 +325,14 @@ document.addEventListener('click', function(e) {
         modalPrice.textContent = price;
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
+        
+        // Заполняем данные пользователя, если он авторизован
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        if (currentUser) {
+            document.getElementById('name').value = `${currentUser.firstName} ${currentUser.lastName}`.trim();
+            document.getElementById('email').value = currentUser.email || '';
+            document.getElementById('phone').value = currentUser.phone || '';
+        }
     }
 });
 
@@ -340,28 +348,42 @@ window.addEventListener('click', function(e) {
     }
 });
 
+// Функция валидации email
+function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Функция валидации формы бронирования
+function validateBookingForm(formData) {
+    if (!formData.name || !formData.email || !formData.phone || !formData.date) {
+        return 'Пожалуйста, заполните все обязательные поля';
+    }
+    
+    if (!validateEmail(formData.email)) {
+        return 'Введите корректный email';
+    }
+    
+    return null;
+}
+
 bookingForm.addEventListener('submit', function(e) {
     e.preventDefault();
     console.log('Попытка бронирования...');
 
     // Проверяем авторизацию
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
     
-    if (!isLoggedIn) {
+    if (!isLoggedIn || !currentUser) {
         alert('Для бронирования необходимо войти в систему');
         window.location.href = 'login.html?redirect=destinations.html';
         return;
     }
 
-    // Получаем имя пользователя из localStorage (с проверкой на существование)
-    const username = localStorage.getItem('username') || 'Гость'; // Значение по умолчанию, если username не найден
-
-    console.log('Имя пользователя:', username); // Отладочная информация
-
     // Собираем данные формы
     const bookingData = {
-        userId: localStorage.getItem('userId') || 'user-' + Date.now().toString().slice(-6),
-        username: username, // Используем полученное имя пользователя
+        userId: currentUser.email, // Используем email как идентификатор пользователя
+        username: `${currentUser.firstName} ${currentUser.lastName}`.trim(),
         name: document.getElementById('name').value.trim(),
         email: document.getElementById('email').value.trim(),
         phone: document.getElementById('phone').value.trim(),
@@ -380,14 +402,28 @@ bookingForm.addEventListener('submit', function(e) {
     };
 
     // Валидация
-    if (!bookingData.name || !bookingData.email || !bookingData.phone || !bookingData.date) {
-        alert('Пожалуйста, заполните все обязательные поля');
+    const validationError = validateBookingForm(bookingData);
+    if (validationError) {
+        alert(validationError);
         return;
     }
 
     try {
         // Сохраняем бронирование
         saveBooking(bookingData);
+        
+        // Обновляем данные пользователя (если изменились)
+        if (currentUser) {
+            currentUser.phone = bookingData.phone; // Обновляем телефон
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Обновляем в общем хранилище пользователей
+            const users = JSON.parse(localStorage.getItem('users') || {});
+            if (users[currentUser.email]) {
+                users[currentUser.email].phone = bookingData.phone;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
         
         // Закрываем модальное окно
         modal.style.display = 'none';
@@ -414,15 +450,15 @@ function getTourImage(country) {
 function saveBooking(bookingData) {
     try {
         // Получаем текущие бронирования из localStorage
-        let bookings = JSON.parse(localStorage.getItem('bookings'));
+        let bookings = JSON.parse(localStorage.getItem('bookings')) || {};
         
-        // Если bookings нет или это не массив, создаем новый массив
-        if (!Array.isArray(bookings)) {
-            bookings = [];
+        // Если для этого пользователя еще нет бронирований, создаем массив
+        if (!bookings[bookingData.userId]) {
+            bookings[bookingData.userId] = [];
         }
         
         // Добавляем новое бронирование
-        bookings.push(bookingData);
+        bookings[bookingData.userId].push(bookingData);
         
         // Сохраняем обновленный список
         localStorage.setItem('bookings', JSON.stringify(bookings));
@@ -433,7 +469,6 @@ function saveBooking(bookingData) {
         throw error;
     }
 }
-
 // Проверяем статус авторизации
 document.addEventListener('DOMContentLoaded', function() {
     // Мобильное меню
@@ -447,9 +482,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Авторизация
     const authButtons = document.getElementById('authButtons');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const username = localStorage.getItem('username') || 'Профиль';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    const username = currentUser ? `${currentUser.firstName} ${currentUser.lastName}`.trim() : 'Профиль';
     
-    if (isLoggedIn) {
+    if (isLoggedIn && currentUser) {
         // Если пользователь вошел, показываем кнопку профиля
         authButtons.innerHTML = `
             <a href="profile.html" class="btn-profile">
@@ -464,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Обработчик выхода
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('username');
+            localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         });
     } else {

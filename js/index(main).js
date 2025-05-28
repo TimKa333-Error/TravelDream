@@ -8,10 +8,11 @@ document.addEventListener('DOMContentLoaded', function() {
         navMenu.classList.toggle('show');
     });
     
-    // Авторизация
+    // Авторизация - теперь используем email из currentUser
     const authButtons = document.getElementById('authButtons');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const username = localStorage.getItem('username') || 'Профиль';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const username = currentUser.email || 'Профиль';
     
     if (isLoggedIn) {
         // Если пользователь вошел, показываем кнопку профиля
@@ -28,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Обработчик выхода
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('username');
+            localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         });
     } else {
@@ -154,8 +155,8 @@ const toursData = {
         * Галерея Уффици
         * Площадь Сан-Марко
         * Дворец дожей`
-                    }
-                };
+    }
+};
 
 // Функция для показа деталей тура
 function showTourDetails(tourId) {
@@ -193,8 +194,9 @@ window.onclick = function(event) {
 // Функция для бронирования тура
 function bookTour() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || {});
     
-    if (isLoggedIn) {
+    if (isLoggedIn && currentUser.email) {
         // Получаем данные о текущем туре из модального окна
         const tourTitle = document.getElementById('modalTourTitle').textContent;
         const tourImage = document.getElementById('modalTourImage').src;
@@ -213,7 +215,8 @@ function bookTour() {
             hotel: 'Отель из тура',
             price: parseInt(tourPrice.replace(/\D/g, '')),
             status: 'confirmed',
-            description: document.getElementById('modalTourFullDescription').textContent
+            description: document.getElementById('modalTourFullDescription').textContent,
+            userEmail: currentUser.email // Добавляем email пользователя к бронированию
         };
         
         // Сохраняем бронирование в localStorage
@@ -236,4 +239,5 @@ function getFutureDate(daysToAdd) {
     date.setDate(date.getDate() + daysToAdd);
     return date.toLocaleDateString('ru-RU');
 }
+
 const player = new Plyr('#player');

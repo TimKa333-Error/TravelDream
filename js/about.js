@@ -11,7 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Авторизация
     const authButtons = document.getElementById('authButtons');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const username = localStorage.getItem('username') || 'Профиль';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const userData = users[currentUser.email] || {};
+    
+    // Получаем имя пользователя или email, если имя не указано
+    const username = userData.firstName 
+        ? `${userData.firstName} ${userData.lastName || ''}`.trim() 
+        : currentUser.email || 'Профиль';
     
     if (isLoggedIn) {
         // Если пользователь вошел, показываем кнопку профиля
@@ -28,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Обработчик выхода
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('username');
+            localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         });
     } else {

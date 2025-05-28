@@ -62,8 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Модифицированная функция валидации формы
     function validateForm({fullName, email, phone, password, confirmPassword, agreeTerms}) {
-        if (!fullName || !email || !phone || !password || !confirmPassword) {
-            return 'Пожалуйста, заполните все поля';
+    if (!fullName || fullName.split(' ').filter(part => part.trim() !== '').length < 2) {
+        return 'Введите фамилию и имя (минимум 2 слова)';
         }
         
         if (!agreeTerms) {
@@ -159,20 +159,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // Функция создания пользователя
     function createUser({fullName, email, phone, password}) {
         const nameParts = fullName.split(' ').filter(part => part.trim() !== '');
-        
-        const userData = {
-            firstName: nameParts[0] || '',
-            lastName: nameParts.slice(1).join(' ') || '',
-            email,
-            phone: phoneInput.value, // уже отформатирован
-            password,
-            avatar: `https://randomuser.me/api/portraits/${Math.random() > 0.5 ? 'men' : 'women'}/${Math.floor(Math.random() * 100)}.jpg`,
-            balance: 0,
-            registrationDate: new Date().toISOString()
-        };
+            let lastName = '';
+            let firstName = '';
+            let middleName = '';
+
+            if (nameParts.length === 1) {
+                firstName = nameParts[0];
+            } else if (nameParts.length === 2) {
+                lastName = nameParts[0];
+                firstName = nameParts[1];
+            } else if (nameParts.length >= 3) {
+                lastName = nameParts[0];
+                firstName = nameParts[1];
+                middleName = nameParts.slice(2).join(' '); // Все остальное - отчество
+            }
+
+            const userData = {
+                firstName: firstName,
+                lastName: lastName,
+                middleName: middleName,
+                email: email,
+                phone: phoneInput.value,
+                password: password,
+                avatar: `https://randomuser.me/api/portraits/${Math.random() > 0.5 ? 'men' : 'women'}/${Math.floor(Math.random() * 100)}.jpg`,
+                balance: 0,
+                registrationDate: new Date().toISOString()
+            };
         
         try {
-            localStorage.setItem('userData', JSON.stringify(userData));
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            users[email] = userData;
+            localStorage.setItem('users', JSON.stringify(users));
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('currentUser', JSON.stringify(userData));
             window.location.href = 'index.html';

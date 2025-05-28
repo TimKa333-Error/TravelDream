@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Получаем данные пользователя из localStorage
-        const userData = JSON.parse(localStorage.getItem('userData'));
+        const users = JSON.parse(localStorage.getItem('users') || {});
+        const userData = users[email];
         
         // Проверяем существует ли пользователь
         if (!userData) {
