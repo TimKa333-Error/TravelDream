@@ -11,7 +11,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Авторизация - теперь используем email из currentUser
     const authButtons = document.getElementById('authButtons');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    
+    // Безопасное получение данных пользователя
+    let currentUser = {};
+    try {
+        const userData = localStorage.getItem('currentUser');
+        if (userData) {
+            currentUser = JSON.parse(userData);
+        }
+    } catch (e) {
+        console.error('Ошибка при чтении данных пользователя:', e);
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('isLoggedIn');
+    }
+    
     const username = currentUser.email || 'Профиль';
     
     if (isLoggedIn) {
@@ -161,7 +174,10 @@ const toursData = {
 // Функция для показа деталей тура
 function showTourDetails(tourId) {
     const tour = toursData[tourId];
+    if (!tour) return;
+    
     const modal = document.getElementById('tourModal');
+    if (!modal) return;
     
     document.getElementById('modalTourTitle').textContent = tour.title;
     document.getElementById('modalTourImage').src = tour.image;
@@ -179,8 +195,11 @@ function showTourDetails(tourId) {
 
 // Функция для закрытия модального окна
 function closeModal() {
-    document.getElementById('tourModal').style.display = 'none';
-    document.body.style.overflow = 'auto';
+    const modal = document.getElementById('tourModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
 }
 
 // Закрытие модального окна при клике вне его
@@ -194,15 +213,32 @@ window.onclick = function(event) {
 // Функция для бронирования тура
 function bookTour() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || {});
+    
+    // Безопасное получение данных пользователя
+    let currentUser = {};
+    try {
+        const userData = localStorage.getItem('currentUser');
+        if (userData) {
+            currentUser = JSON.parse(userData);
+        }
+    } catch (e) {
+        console.error('Ошибка при чтении данных пользователя:', e);
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('isLoggedIn');
+        
+        if (confirm('Для бронирования необходимо войти в систему. Перейти на страницу входа?')) {
+            window.location.href = 'login.html';
+        }
+        return;
+    }
     
     if (isLoggedIn && currentUser.email) {
         // Получаем данные о текущем туре из модального окна
-        const tourTitle = document.getElementById('modalTourTitle').textContent;
-        const tourImage = document.getElementById('modalTourImage').src;
-        const tourDays = document.getElementById('modalTourDays').textContent;
-        const tourPeople = document.getElementById('modalTourPeople').textContent;
-        const tourPrice = document.getElementById('modalTourPrice').textContent;
+        const tourTitle = document.getElementById('modalTourTitle')?.textContent || 'Неизвестный тур';
+        const tourImage = document.getElementById('modalTourImage')?.src || '';
+        const tourDays = document.getElementById('modalTourDays')?.textContent || '0 дней';
+        const tourPeople = document.getElementById('modalTourPeople')?.textContent || '1 человек';
+        const tourPrice = document.getElementById('modalTourPrice')?.textContent || '0$';
         
         // Создаем новое бронирование
         const newBooking = {
@@ -210,22 +246,27 @@ function bookTour() {
             title: tourTitle,
             image: tourImage,
             date: getFutureDate(7) + ' - ' + getFutureDate(parseInt(tourDays) + 7),
-            duration: parseInt(tourDays),
-            people: parseInt(tourPeople),
+            duration: parseInt(tourDays) || 0,
+            people: parseInt(tourPeople) || 1,
             hotel: 'Отель из тура',
-            price: parseInt(tourPrice.replace(/\D/g, '')),
+            price: parseInt(tourPrice.replace(/\D/g, '')) || 0,
             status: 'confirmed',
-            description: document.getElementById('modalTourFullDescription').textContent,
-            userEmail: currentUser.email // Добавляем email пользователя к бронированию
+            description: document.getElementById('modalTourFullDescription')?.textContent || '',
+            userEmail: currentUser.email
         };
         
         // Сохраняем бронирование в localStorage
-        const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-        bookings.unshift(newBooking);
-        localStorage.setItem('bookings', JSON.stringify(bookings));
-        
-        // Перенаправляем на страницу бронирований
-        window.location.href = 'profile-bookings.html?new_booking=true';
+        try {
+            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+            bookings.unshift(newBooking);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+            
+            // Перенаправляем на страницу бронирований
+            window.location.href = 'profile-bookings.html?new_booking=true';
+        } catch (e) {
+            console.error('Ошибка при сохранении бронирования:', e);
+            alert('Произошла ошибка при бронировании. Пожалуйста, попробуйте еще раз.');
+        }
     } else {
         if (confirm('Для бронирования тура необходимо войти в систему. Хотите перейти на страницу входа?')) {
             window.location.href = 'login.html';
@@ -236,8 +277,9 @@ function bookTour() {
 // Вспомогательная функция для генерации даты
 function getFutureDate(daysToAdd) {
     const date = new Date();
-    date.setDate(date.getDate() + daysToAdd);
+    date.setDate(date.getDate() + (daysToAdd || 0));
     return date.toLocaleDateString('ru-RU');
 }
 
+// Инициализация видеоплеера
 const player = new Plyr('#player');
