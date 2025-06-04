@@ -28,45 +28,102 @@ document.addEventListener('DOMContentLoaded', function() {
     const genderBtns = document.querySelectorAll('.gender-btn');
 
     function loadProfileData() {
-        // Получаем данные из localStorage
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const users = JSON.parse(localStorage.getItem('users')) || {};
-        const userData = users[currentUser.email];
-        
-        if (!userData) {
-            // Если данных нет - перенаправляем на регистрацию
-            window.location.href = 'register.html';
-            return;
-        }
-        
-        // Заполняем поля формы
-        document.getElementById('firstName').value = userData.firstName || '';
-        document.getElementById('lastName').value = userData.lastName || '';
-        document.getElementById('middleName').value = userData.middleName || '';
-        document.getElementById('email').value = userData.email;
-        document.getElementById('phone').value = userData.phone;
-        document.getElementById('birthday').value = userData.birthday || '';
-        document.getElementById('country').value = userData.country || '';
-        document.getElementById('city').value = userData.city || '';
-        
-        // Устанавливаем аватар
-        const avatarImg = document.getElementById('profileAvatar');
-        if (userData.avatar) {
-            avatarImg.src = userData.avatar;
-        }
-        
-        // Обновляем информацию в сайдбаре
-        document.getElementById('profileName').textContent = 
-            `${userData.firstName} ${userData.lastName}`;
-        document.getElementById('profileEmail').textContent = userData.email;
-        
-        return userData;
+    // Получаем данные из localStorage
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const users = JSON.parse(localStorage.getItem('users')) || {};
+    const userData = users[currentUser.email] || JSON.parse(localStorage.getItem('userData')) || {};
+    
+    if (!userData || !userData.email) {
+        // Если данных нет - перенаправляем на регистрацию
+        window.location.href = 'register.html';
+        return;
     }
+    
+    // Заполняем поля формы
+    document.getElementById('firstName').value = userData.firstName || '';
+    document.getElementById('lastName').value = userData.lastName || '';
+    document.getElementById('middleName').value = userData.middleName || '';
+    document.getElementById('email').value = userData.email || '';
+    document.getElementById('phone').value = userData.phone || '';
+    document.getElementById('birthday').value = userData.birthday || '';
+    document.getElementById('country').value = userData.country || '';
+    document.getElementById('city').value = userData.city || '';
+    
+    // Устанавливаем аватар
+    const avatarImg = document.getElementById('profileAvatar');
+    if (userData.avatar) {
+        avatarImg.src = userData.avatar;
+    }
+    
+    // Обновляем информацию в сайдбаре
+    document.getElementById('profileName').textContent = 
+        `${userData.firstName} ${userData.lastName}`;
+    document.getElementById('profileEmail').textContent = userData.email || '';
+    
+    return userData;
+}
 
     function saveProfileData(data) {
-        // Сохраняем обновленные данные
-        localStorage.setItem('userData', JSON.stringify(data));
+    // Получаем текущего пользователя
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const users = JSON.parse(localStorage.getItem('users')) || {};
+    
+    // Обновляем данные пользователя
+    if (users[currentUser.email]) {
+        users[currentUser.email] = {
+            ...users[currentUser.email],
+            ...data
+        };
+        localStorage.setItem('users', JSON.stringify(users));
     }
+    
+    // Также сохраняем в userData для быстрого доступа
+    localStorage.setItem('userData', JSON.stringify(data));
+}
+
+// Обновленный обработчик отправки формы
+profileForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const userData = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        middleName: document.getElementById('middleName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        birthday: document.getElementById('birthday').value,
+        country: document.getElementById('country').value,
+        city: document.getElementById('city').value,
+        // Сохраняем аватар, если он уже был установлен
+        avatar: document.getElementById('profileAvatar').src
+    };
+    
+    // Сохраняем данные
+    saveProfileData(userData);
+    
+    // Обновляем текущего пользователя
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser) {
+        currentUser.firstName = userData.firstName;
+        currentUser.lastName = userData.lastName;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    }
+    
+    // Отключаем режим редактирования
+    formInputs.forEach(input => {
+        input.disabled = true;
+    });
+    formActions.style.display = 'none';
+    editProfileBtn.style.display = 'block';
+    
+    // Обновляем информацию в сайдбаре
+    document.getElementById('profileName').textContent = 
+        `${userData.firstName} ${userData.lastName}`;
+    document.getElementById('profileEmail').textContent = userData.email;
+    
+    // Показываем уведомление
+    showToast('Данные профиля успешно обновлены!');
+});
 
     // Функции для уведомлений
     function showToast(message, type = 'success') {

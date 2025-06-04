@@ -417,9 +417,9 @@ const App = {
     
     if (!booking) return;
     
-    // Загружаем баланс из localStorage
+    // Загружаем данные пользователя
     const users = JSON.parse(localStorage.getItem('users')) || {};
-    const userData = users[currentUser.email] || {};
+    let userData = users[currentUser.email] || {};
     const balance = parseFloat(userData.balance || 0);
     const price = booking.price || 0;
     
@@ -435,6 +435,24 @@ const App = {
     // Списываем средства
     const newBalance = balance - price;
     userData.balance = newBalance;
+    
+    // Создаем транзакцию
+    const transaction = {
+        id: Date.now(),
+        type: 'Оплата тура: ' + booking.title,
+        amount: -price,
+        timestamp: new Date().toISOString(),
+        method: 'Списание с баланса',
+        icon: 'fa-plane'
+    };
+    
+    // Добавляем транзакцию в userData
+    if (!userData.transactions) {
+        userData.transactions = [];
+    }
+    userData.transactions.unshift(transaction);
+    
+    // Сохраняем обновленные данные пользователя
     users[currentUser.email] = userData;
     localStorage.setItem('users', JSON.stringify(users));
     
@@ -445,32 +463,17 @@ const App = {
     );
     localStorage.setItem('bookings', JSON.stringify(this.bookings));
     
-    // Добавляем транзакцию в историю
-    const transactionsStr = localStorage.getItem('transactions');
-    let transactions = {};
-    try {
-        transactions = transactionsStr ? JSON.parse(transactionsStr) : {};
-    } catch (e) {
-        console.error("Ошибка при парсинге транзакций:", e);
-        transactions = {};
-    }
-    
-    if (!transactions[currentUser.email]) {
-        transactions[currentUser.email] = [];
-    }
-    transactions[currentUser.email].unshift({
-        id: Date.now(),
-        type: 'Оплата тура: ' + booking.title,
-        amount: -price,
-        date: new Date().toLocaleDateString('ru-RU'),
-        method: 'Списание с баланса',
-        icon: 'fa-plane'
-    });
-    localStorage.setItem('transactions', JSON.stringify(transactions));
+    // Обновляем текущего пользователя в localStorage
+    localStorage.setItem('currentUser', JSON.stringify(userData));
     
     // Обновляем отображение
     this.loadBookings('current');
     alert('Оплата прошла успешно! Спасибо за покупку.');
+    
+    // Если мы на странице баланса, обновляем ее
+    if (window.location.pathname.includes('balance.html')) {
+        window.location.reload();
+    }
 },
     
     openModal: function(modalId) {

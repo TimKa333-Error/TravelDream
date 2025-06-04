@@ -131,9 +131,13 @@ function updateBalance() {
 function renderTransactions() {
     transactionsList.innerHTML = '';
     
-    const sortedTransactions = [...transactions].sort((a, b) => 
-        new Date(b.timestamp || b.date) - new Date(a.timestamp || a.date)
-    );
+    // Сортируем транзакции по дате (новые сверху)
+    const sortedTransactions = [...transactions].sort((a, b) => {
+        const dateA = a.timestamp ? new Date(a.timestamp) : new Date(0);
+        const dateB = b.timestamp ? new Date(b.timestamp) : new Date(0);
+        return dateB - dateA;
+    });
+
 
     if (sortedTransactions.length === 0) {
         transactionsList.innerHTML = `
